@@ -201,14 +201,10 @@ angular.module('starter.controllers', ['angularMoment'])
         alert("click " + item);
     }
 
-    function getColor(debt) {
-            if (debt > 1000)
-                return "red"
-            else {
-                var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
-                color = color[Math.floor(Math.random()*color.length)];
-                return "../img/" + color;
-           }
+    function getColor() {
+        var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
+        color = color[Math.floor(Math.random()*color.length)];
+        return "../img/" + color;
     }
 
     var sendData = {'tag':'getMostBuyedItem', 'user_id':'1'};
@@ -217,7 +213,6 @@ angular.module('starter.controllers', ['angularMoment'])
         DBService.sendToDB(sendData, false).then(function(promise) {
           if (promise.data.success === 1) {
              $scope.items = promise.data.items;
-             console.log($scope.items.image);
              angular.forEach($scope.items, function(c) {
                     if (!c.image)
                     c.image = getColor();
