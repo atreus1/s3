@@ -75,13 +75,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 templateUrl: 'templates/gallery.html',
                 controller: 'GalleryCtrl'
             },
-            'fabContent': {
-                template: '<button id="fab-gallery" class="button button-fab button-fab-top-left expanded button-energized-900 spin"><i class="icon ion-heart"></i></button>',
-                controller: function ($timeout) {
-                    $timeout(function () {
-                        document.getElementById('fab-gallery').classList.toggle('on');
-                    }, 600);
-                }
+           'fabContent': {
+                template: ''
             }
         }
     })

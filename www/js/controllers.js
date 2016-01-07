@@ -181,17 +181,60 @@ angular.module('starter.controllers', ['angularMoment'])
 
 })
 
-.controller('GalleryCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
+.controller('GalleryCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion, DBService) {
     // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.$parent.setHeaderFab('left');
+    $scope.isExpanded = true;
+    $scope.$parent.setExpanded(true);
+    $scope.items = {};
+    $scope.taps = 0;
 
-    // Delay expansion
-    $timeout(function() {
-        $scope.isExpanded = true;
-        $scope.$parent.setExpanded(true);
-    }, 300);
+    $scope.onHold = function(item, count) {
+        if(!count)
+            alert("hold " + item + " count 1");
+        alert("hold " + item + " count " + count);
+    }
+
+    $scope.onClick = function(item) {
+        alert("click " + item);
+    }
+
+    function getColor(debt) {
+            if (debt > 1000)
+                return "red"
+            else {
+                var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
+                color = color[Math.floor(Math.random()*color.length)];
+                return "../img/" + color;
+           }
+    }
+
+    var sendData = {'tag':'getMostBuyedItem', 'user_id':'1'};
+
+    $scope.doRefresh = function() {
+        DBService.sendToDB(sendData, false).then(function(promise) {
+          if (promise.data.success === 1) {
+             $scope.items = promise.data.items;
+             console.log($scope.items.image);
+             angular.forEach($scope.items, function(c) {
+                    if (!c.image)
+                    c.image = getColor();
+             });
+          }
+        }).finally(function() {
+          // Stop the ion-refresher from spinning
+          $scope.$broadcast('scroll.refreshComplete');
+        });
+      };
+        // Update feed when user enters scene
+      $scope.$on('$stateChangeSuccess', function(event, toState) {
+          if (toState.name === "app.activity") {
+            $scope.doRefresh();
+        }
+      });
+      $scope.doRefresh();
 
    // Activate ink for controller
     ionicMaterialInk.displayEffect();

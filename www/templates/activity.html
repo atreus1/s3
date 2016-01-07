@@ -2,7 +2,7 @@
     <ion-content ng-class="{expanded:isExpanded}" class="animate-fade-slide-in" >
     <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher> 
 
-    <div ng-controller="ActivityCtrl" ng-repeat="f in feed" ui-sref="app.gallery" class="card stable-bg ink ink-dark animate-fade-slide-in-right" >
+    <div ng-controller="ActivityCtrl" ng-repeat="f in feed" class="card stable-bg ink ink-dark animate-fade-slide-in-right" >
                 <div class="item item-avatar item-text-wrap">
                     <span class="avatar" style="background-image: url('img/jon-snow.jpg');"></span>
                     <strong>{{f.firstname}} {{f.lastname}}</strong> buys a frekin' {{f.name}}.
