@@ -191,7 +191,7 @@ angular.module('starter.controllers', ['angularMoment'])
     // $scope.$parent.showHeader();
     // $scope.$parent.clearFabs();
     // $scope.$parent.setHeaderFab('left');
-    $scope.isExpanded = true;
+    // $scope.isExpanded = true;
     // $scope.$parent.setExpanded(true);
     $scope.items = {};
     $scope.taps = 0;
@@ -200,10 +200,6 @@ angular.module('starter.controllers', ['angularMoment'])
         if(!count)
             alert("hold " + item + " count 1");
         alert("hold " + item + " count " + count);
-    }
-
-    $scope.onClick = function(item) {
-        alert("click " + item);
     }
 
     function getColor() {
