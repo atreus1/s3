@@ -1,4 +1,4 @@
-<ion-view view-title="Login" align-title="left" hide-nav-bar="true">
+<!-- <ion-view>
     <ion-content style="background: url(img/login.jpg) center; background-size: cover;">
         <div class="hero no-header flat">
             <div class="content">
@@ -12,5 +12,41 @@
         <div class="padding">
             <button class="button button-full button-assertive ink" ng-disabled="!user.username || !user.password" ng-click="login()">Login</button>
         </div>  
+    </ion-content>
+</ion-view> -->
+
+
+<!-- <ion-view hide-nav-bar="true" hide-back-button="true" view-title="Logga in">
+  <ion-content class="padding login">
+    <form class="list">
+      <ion-list>
+        <label class="item item-input">
+          <input type="email" placeholder="Username" ng-model="user.username">
+        </label>
+        <label class="item item-input">
+          <input type="password" placeholder="Password" ng-model="user.password">
+        </label>
+      </ion-list>
+      <div class="spacer" style="height: 40px;"></div>
+      <button class="button button-positive button-block button-large" ng-disabled="!user.username || !user.password" ng-click="login()">Logga in</button>
+    </form>
+  </ion-content>
+</ion-view> -->
+
+<ion-view hide-nav-bar="true" hide-back-button="true" view-title="Logga in">
+    <ion-content scroll="false" class="login-container">
+        <section>
+            <div class = "col header text-center">
+               <!-- <img src="./img/ionic.png" class = "logo" /> -->
+               <h1 style="margin-top:120px;">streck.app</h1>
+            </div>
+	        <div class="list">
+	            <ion-md-input placeholder="email" highlight-color="balanced" type="email" ng-model="user.email"></ion-md-input>
+	            <ion-md-input placeholder="lösenord" highlight-color="energized" type="password" ng-model="user.password"></ion-md-input>
+	        </div>
+	        <div class="padding">
+	            <button class="button button-full button-assertive ink" ng-disabled="!user.email || !user.password" ng-click="login()">Logga in</button>
+	        </div>			
+		</section>	
     </ion-content>
 </ion-view>
