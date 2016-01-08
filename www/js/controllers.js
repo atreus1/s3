@@ -1,7 +1,7 @@
 /* global angular, document, window */
 'use strict';
 
-angular.module('starter.controllers', ['angularMoment', 'ngCordova'])
+angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout) {
     // Form data for the login modal
@@ -103,10 +103,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova'])
     // }, 0);
     // ionicMaterialInk.displayEffect();
     $scope.login = function() {
-        $state.go('tab.activity');
-
-        console.log($scope.user);
-
+        $state.go('tab.fav');
         // window.localStorage["user_id"] = user.username;
     }    
 })
@@ -130,45 +127,93 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova'])
     ionicMaterialInk.displayEffect();
 })
 
-.controller('ProfileCtrl', function($scope, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk) {
+.controller('ProfileCtrl', function($scope, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, DBService) {
     // Set Header
     // $scope.$parent.showHeader();
     // $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     // $scope.$parent.setExpanded(true);
     // $scope.$parent.setHeaderFab(false);
+    $scope.debt = {};
+
+    var sendData = {'tag':'getProfile', 'user_id': '1'};
+        DBService.sendToDB(sendData, false).then(function(promise) {
+          if (promise.data.success === 1) {
+            $scope.profile = promise.data.profile;
+            // vibrate here
+            // $ionicPlatform.ready(function() {
+            //     // Vibrate 100ms
+            //     $cordovaVibration.vibrate(100);                
+            // });
+          }
+          $scope.debt = $scope.profile[0].debt;
+        });
+
+
+ $scope.options = {
+            chart: {
+                type: 'pieChart',
+                height: 500,
+                donut: true,
+                x: function(d){return d.name;},
+                y: function(d){return d.sum;},
+                showLabels: false,
+
+                pie: {
+                    startAngle: function(d) { return d.startAngle/2 -Math.PI/2 },
+                    endAngle: function(d) { return d.endAngle/2 -Math.PI/2 }
+                },
+                duration: 500,
+                legend: {
+                    margin: {
+                        top: 10,
+                        right: 100,
+                        bottom: 0,
+                        left: 0
+                    }
+                }
+            }
+        };
+
 
     // Set Motion
-    $timeout(function() {
-        ionicMaterialMotion.slideUp({
-            selector: '.slide-up'
-        });
-    }, 300);
+    //$timeout(function() {
+    //    ionicMaterialMotion.slideUp({
+    //        selector: '.slide-up'
+    //    });
+    //}, 300);
 
  // Set Motion
-    ionicMaterialMotion.fadeSlideInRight();
+    ionicMaterialMotion.blinds();
 
     // Set Ink
     ionicMaterialInk.displayEffect();
 })
 
-.controller('ActivityCtrl', function($scope, $filter, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, DBService) {
+.controller('FeedCtrl', function($scope, $state, $filter, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, DBService) {
     // $scope.$parent.showHeader();
     // $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     // $scope.$parent.setExpanded(true);
     // $scope.$parent.setHeaderFab(false);
-    $scope.hello = "TJAAAA";
+
+    function getColor() {
+        var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
+        color = color[Math.floor(Math.random()*color.length)];
+        return "../img/" + color;
+    }
       
     var sendData = {'tag':'getFeed'};
     $scope.doRefresh = function() {
         DBService.sendToDB(sendData, false).then(function(promise) {
           if (promise.data.success === 1) {
              $scope.feed = promise.data.feed;
-             console.log(promise.data.feed);
+             console.log($scope.feed);
              angular.forEach($scope.feed, function(c) {
                 c.date = new Date(c.date);
                 c.datediff = moment(c.date).diff(moment(new Date), 'days');
+                if (!c.image)
+                    c.image = getColor();
             }); 
           }
         }).finally(function() {
@@ -176,14 +221,13 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova'])
           $scope.$broadcast('scroll.refreshComplete');
         });
       };
-        // Update feed when user enters scene
-      $scope.$on('$stateChangeSuccess', function(event, toState) {
-          if (toState.name === "app.activity") {
-            $scope.doRefresh();
-        }
-      });
 
-    // ionicMaterialMotion.fadeSlideInRight();
+        // Update feed when user enters scene
+        $scope.$on('$ionicView.loaded', function(){
+            $scope.doRefresh();
+        });
+
+    ionicMaterialMotion.blinds();
 
     // // Activate ink for controller
     // ionicMaterialInk.displayEffect();
@@ -191,7 +235,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova'])
 
 })
 
-.controller('GalleryCtrl', function($scope, $ionicPlatform, DBService) { //, $cordovaVibration) {
+.controller('FavCtrl', function($scope, $ionicPlatform, ionicMaterialMotion, DBService) { //, $cordovaVibration) {
     // Set Header
     // $scope.$parent.showHeader();
     // $scope.$parent.clearFabs();
@@ -202,22 +246,12 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova'])
     $scope.taps = 0;
 
     $scope.onHold = function(item, count) {   
-
         if (!count) {
             count = 1;
         }
-
-        console.log("köp");
-
         var sendData = {'tag':'purchaseItem', 'user_id': '1', 'item_id':item, 'count':count};
-
-        console.log(sendData);
-
         DBService.sendToDB(sendData, false).then(function(promise) {
           if (promise.data.success === 1) {
-            console.log("köp klart!");
-            console.log(promise.data);
-
             // vibrate here
             // $ionicPlatform.ready(function() {
             //     // Vibrate 100ms
@@ -250,13 +284,9 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova'])
         });
       };
         // Update feed when user enters scene
-      $scope.$on('$stateChangeSuccess', function(event, toState) {
-          if (toState.name === "app.activity") {
+      $scope.$on('$ionicView.loaded', function(){
             $scope.doRefresh();
-        }
-      });
-      $scope.doRefresh();
-
+        });
    // Activate ink for controller
     // ionicMaterialInk.displayEffect();
 

@@ -47,12 +47,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
   // Each tab has its own nav history stack:
 
-  .state('tab.activity', {
-    url: '/activity',
+  .state('tab.feed', {
+    url: '/feed',
     views: {
-      'tab-activity': {
-        templateUrl: 'templates/tab-activity.html',
-        controller: 'ActivityCtrl'
+      'tab-feed': {
+        templateUrl: 'templates/tab-feed.html',
+        controller: 'FeedCtrl'
       }
     }
   })
@@ -67,12 +67,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   })
 
-  .state('tab.gallery', {
-    url: '/gallery',
+  .state('tab.fav', {
+    url: '/fav',
     views: {
-      'tab-gallery': {
-        templateUrl: 'templates/tab-gallery.html',
-        controller: 'GalleryCtrl'
+      'tab-fav': {
+        templateUrl: 'templates/tab-fav.html',
+        controller: 'FavCtrl'
       }
     }
   })
