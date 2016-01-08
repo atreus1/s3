@@ -1,5 +1,5 @@
 <ion-view view-title="Gallery">
-    <ion-content ng-class="{expanded:isExpanded}" class="animate-fade-slide-in">
+    <ion-content class="has-header has-tabs">
         <div class="list half">
             <div ng-controller="GalleryCtrl" ng-repeat="i in items" ng-if="$even" on-double-tap="onClick(i.item_id)" on-hold="onHold(i.item_id, count)" ng-init="count=0" class="card card-gallery item item-text-wrap">
                 <div class="ink dark-bg" on-tap="count = count + 1" style="background: url('{{i.image}}');">
@@ -12,7 +12,7 @@
                         {{i.heavydrinker}}
                     </a>
                     <a class="tab-item stable-bg positive-900">
-                        <i class="icon ion-chatbubbles" on-tap="count=0"></i>
+                        <i class="icon ion-close" on-tap="count=0"></i>
                     </a>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                         {{i.heavydrinker}}
                     </a>
                     <a class="tab-item stable-bg positive-900">
-                        <i class="icon ion-chatbubbles" on-tap="count=0"></i>
+                        <i class="icon ion-close" on-tap="count=0"></i>
                     </a>
                 </div>
             </div>

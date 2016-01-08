@@ -10,7 +10,7 @@
             <ion-md-input placeholder="Password" highlight-color="energized" type="password" ng-model="user.password"></ion-md-input>
         </div>
         <div class="padding">
-            <button class="button button-full button-assertive ink" ng-disabled="!user.username || !user.password" ui-sref="app.activity">Login</button>
+            <button class="button button-full button-assertive ink" ng-disabled="!user.username || !user.password" ng-click="login()">Login</button>
         </div>  
     </ion-content>
 </ion-view>
