@@ -134,31 +134,30 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
     $scope.isExpanded = true;
     // $scope.$parent.setExpanded(true);
     // $scope.$parent.setHeaderFab(false);
-    $scope.debt = {};
 
-    var sendData = {'tag':'getProfile', 'user_id': '1'};
-        DBService.sendToDB(sendData, false).then(function(promise) {
-          if (promise.data.success === 1) {
-            $scope.profile = promise.data.profile;
-            // vibrate here
-            // $ionicPlatform.ready(function() {
-            //     // Vibrate 100ms
-            //     $cordovaVibration.vibrate(100);                
-            // });
-          }
-          $scope.debt = $scope.profile[0].debt;
-        });
+     $scope.doRefresh = function() {
+        var sendData = {'tag':'getProfile', 'user_id': '1'};
+            DBService.sendToDB(sendData, false).then(function(promise) {
+              if (promise.data.success === 1) {
+                $scope.profile = promise.data.profile; 
+              }
 
-
- $scope.options = {
+            $scope.options = {
             chart: {
                 type: 'pieChart',
                 height: 500,
+                margin: {
+                        top: -100,
+                        right: 0,
+                        bottom: 0,
+                        left: 0
+                },
                 donut: true,
+                title: $scope.profile[0].debt,
+                titleOffset: -30,
                 x: function(d){return d.name;},
                 y: function(d){return d.sum;},
-                showLabels: false,
-
+                showLabels: false,             
                 pie: {
                     startAngle: function(d) { return d.startAngle/2 -Math.PI/2 },
                     endAngle: function(d) { return d.endAngle/2 -Math.PI/2 }
@@ -166,7 +165,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
                 duration: 500,
                 legend: {
                     margin: {
-                        top: 10,
+                        top: 8,
                         right: 100,
                         bottom: 0,
                         left: 0
@@ -175,6 +174,13 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
             }
         };
 
+
+            });
+        };
+
+        $scope.$on('$ionicView.loaded', function(){
+            $scope.doRefresh();
+        });
 
     // Set Motion
     //$timeout(function() {
@@ -208,9 +214,8 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
         DBService.sendToDB(sendData, false).then(function(promise) {
           if (promise.data.success === 1) {
              $scope.feed = promise.data.feed;
-             console.log($scope.feed);
              angular.forEach($scope.feed, function(c) {
-                c.date = new Date(c.date);
+                c.date = new Date(c.date*1000);
                 c.datediff = moment(c.date).diff(moment(new Date), 'days');
                 if (!c.image)
                     c.image = getColor();
@@ -251,13 +256,16 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
         }
         var sendData = {'tag':'purchaseItem', 'user_id': '1', 'item_id':item, 'count':count};
         DBService.sendToDB(sendData, false).then(function(promise) {
-          if (promise.data.success === 1) {
-            // vibrate here
-            // $ionicPlatform.ready(function() {
-            //     // Vibrate 100ms
-            //     $cordovaVibration.vibrate(100);                
-            // });
-          }
+            if (promise.data.success === 1) {
+                if (window.cordova) {
+                    $ionicPlatform.ready(function() {
+                        // Vibrate 100ms
+                        $cordovaVibration.vibrate(100);
+                    });
+                }
+            } else {
+                // display popup here about try again
+            }
         });
     }
 
@@ -298,22 +306,42 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
     // });
 })
 
-.controller('ScanCtrl', function($scope, $ionicPlatform, DBService) {
-  $scope.scanBarcode = function() {
-    console.log("Knappen");
-    $ionicPlatform.ready(function() {
-      console.log("we are ready!");
-      // navigator.helloworld.say();
-      cordova.plugins.barcodeScanner.scan(
-        function (result) {
-          alert(result.text);
-        }, 
-        function (error) {
-          alert("Scanning failed: " + error);
-        }
-      );
-    });    
-  }
+.controller('ScanCtrl', function($scope, $ionicPlatform, DBService, $cordovaVibration) {
+    $scope.buy = function(barcode) {
+        var sendData = {'tag':'purchaseBarcodeItem', 'user_id': '1', 'barcode':barcode};
+        DBService.sendToDB(sendData, false).then(function(promise) {
+            if (promise.data.success === 1) {
+                if (window.cordova) {
+                    $ionicPlatform.ready(function() {
+                        // Vibrate 100ms
+                        $cordovaVibration.vibrate(100);
+                    });
+                }
+            } else {
+                alert(promise.data.error_msg);
+                // display popup here about try again
+            }
+        });        
+    }
+
+    if (window.cordova) {
+        $ionicPlatform.ready(function() {
+            cordova.plugins.barcodeScanner.scan(
+                function (result) {
+                    if (result.cancelled) {
+                        // Vad ska vi göra här? Visa en lista istället?
+                    } else {
+                        $scope.buy(result.text);
+                    }
+                }, 
+                function (error) {
+                    // alert("Scanning failed: " + error);
+                }
+            );
+        });        
+    } else {
+        $scope.infoText = "Denna funktionen fungerar ej i webbläsern.";
+    }
 })
 
 ;

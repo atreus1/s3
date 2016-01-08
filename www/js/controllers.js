@@ -256,13 +256,16 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
         }
         var sendData = {'tag':'purchaseItem', 'user_id': '1', 'item_id':item, 'count':count};
         DBService.sendToDB(sendData, false).then(function(promise) {
-          if (promise.data.success === 1) {
-            // vibrate here
-            // $ionicPlatform.ready(function() {
-            //     // Vibrate 100ms
-            //     $cordovaVibration.vibrate(100);                
-            // });
-          }
+            if (promise.data.success === 1) {
+                if (window.cordova) {
+                    $ionicPlatform.ready(function() {
+                        // Vibrate 100ms
+                        $cordovaVibration.vibrate(100);
+                    });
+                }
+            } else {
+                // display popup here about try again
+            }
         });
     }
 
@@ -303,22 +306,42 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
     // });
 })
 
-.controller('ScanCtrl', function($scope, $ionicPlatform, DBService) {
-  $scope.scanBarcode = function() {
-    console.log("Knappen");
-    $ionicPlatform.ready(function() {
-      console.log("we are ready!");
-      // navigator.helloworld.say();
-      cordova.plugins.barcodeScanner.scan(
-        function (result) {
-          alert(result.text);
-        }, 
-        function (error) {
-          alert("Scanning failed: " + error);
-        }
-      );
-    });    
-  }
+.controller('ScanCtrl', function($scope, $ionicPlatform, DBService, $cordovaVibration) {
+    $scope.buy = function(barcode) {
+        var sendData = {'tag':'purchaseBarcodeItem', 'user_id': '1', 'barcode':barcode};
+        DBService.sendToDB(sendData, false).then(function(promise) {
+            if (promise.data.success === 1) {
+                if (window.cordova) {
+                    $ionicPlatform.ready(function() {
+                        // Vibrate 100ms
+                        $cordovaVibration.vibrate(100);
+                    });
+                }
+            } else {
+                alert(promise.data.error_msg);
+                // display popup here about try again
+            }
+        });        
+    }
+
+    if (window.cordova) {
+        $ionicPlatform.ready(function() {
+            cordova.plugins.barcodeScanner.scan(
+                function (result) {
+                    if (result.cancelled) {
+                        // Vad ska vi göra här? Visa en lista istället?
+                    } else {
+                        $scope.buy(result.text);
+                    }
+                }, 
+                function (error) {
+                    // alert("Scanning failed: " + error);
+                }
+            );
+        });        
+    } else {
+        $scope.infoText = "Denna funktionen fungerar ej i webbläsern.";
+    }
 })
 
 ;
