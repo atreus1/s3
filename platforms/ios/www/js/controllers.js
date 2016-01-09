@@ -306,25 +306,67 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
     // });
 })
 
-.controller('ScanCtrl', function($scope, $ionicPlatform, DBService, $cordovaVibration) {
+.controller('ScanCtrl', function($scope, $ionicPlatform, DBService, $cordovaVibration, $timeout, ionicMaterialInk, ionicMaterialMotion) {
+    $scope.loading = false;
+    $scope.purchaseComplete = false;
+
+    $scope.name = "";
+    $scope.price = "";
+    $scope.volume = "";
+    $scope.alcohol = "";
+    $scope.image = "";
+
+    $scope.message = "";
+
+    $scope.randomMessage = function() {
+        var messages = [
+            "DDDJF",
+            "Ahh mumma, fan så gott med "+$scope.name+"!",
+            "Drick då!",
+            "Svagdricka?!",
+            "Häv en 12:a då!",
+            "Du vågar aldrig...",
+            $scope.price+" spänn? Hur fan har du råd med det?",
+            $scope.price+" ohhh där ryker studiebidraget!",
+            $scope.alcohol+"%? Ska du bli nykter eller?",
+            "Fy fan vad äckligt! Bäsk är tamifan godare.",
+            "Kan du läsa det här är du för nykter.",
+            "Se för fan till att inte spilla nu."
+        ];
+
+        var random = Math.floor((Math.random() * messages.length) + 1);
+        $scope.message = messages[random];
+    }
+
+
     $scope.buy = function(barcode) {
-        var sendData = {'tag':'purchaseBarcodeItem', 'user_id': '1', 'barcode':barcode};
-        DBService.sendToDB(sendData, false).then(function(promise) {
+        var sendData = {'tag':'purchaseBarcodeItem', 'user_id': '1', 'barcode':barcode};        
+
+        DBService.sendToDB(sendData, true).then(function(promise) {
             if (promise.data.success === 1) {
+                $scope.loading = false;
+
                 if (window.cordova) {
                     $ionicPlatform.ready(function() {
                         // Vibrate 100ms
                         $cordovaVibration.vibrate(100);
+
+                        $scope.name = promise.data.item.name;
+                        $scope.price = promise.data.item.price;
+                        $scope.volume = promise.data.item.volume;
+                        $scope.alcohol = promise.data.item.alcohol;
+                        $scope.image = promise.data.item.image;
+
+                        $scope.randomMessage();
+                        $scope.purchaseComplete = true;
                     });
                 }
-            } else {
-                alert(promise.data.error_msg);
-                // display popup here about try again
             }
         });        
     }
 
     if (window.cordova) {
+        $scope.loading = true;
         $ionicPlatform.ready(function() {
             cordova.plugins.barcodeScanner.scan(
                 function (result) {
@@ -335,13 +377,14 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3'])
                     }
                 }, 
                 function (error) {
-                    // alert("Scanning failed: " + error);
+                    //alert("Scanning failed: " + error);
                 }
             );
         });        
     } else {
-        $scope.infoText = "Denna funktionen fungerar ej i webbläsern.";
+        $scope.infoText = "Denna funktion fungerar ej i webbläsaren.";
     }
+
 })
 
 ;
