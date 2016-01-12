@@ -7,6 +7,12 @@ angular.module('starter.services', [])
         .success(function (data, status, headers, config) {
           if (data.success !== 1) {
             console.log(data.error_msg);
+            if (showPopup) {
+              var welcomePopup = $ionicPopup.alert({
+                title : "Unexpected error",
+                subTitle: data.error_msg
+              });
+            }
           }
         })
         .error(function (data, status, headers, config) {

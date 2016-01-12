@@ -1,0 +1,24 @@
+<ion-view title="Registrera" name="register-view">
+  <ion-content scroll="false" class="padding has-header has-tabs">
+    <form class="list">
+      <ion-list>
+        <label class="item item-input">
+          <input type="text" placeholder="Personnummer" ng-model="user.user_id">
+        </label>      
+        <label class="item item-input">
+          <input type="text" placeholder="Förnamn" ng-model="user.firstname">
+        </label>
+        <label class="item item-input">
+          <input type="text" placeholder="Efternamn" ng-model="user.lastname">
+        </label>        
+        <label class="item item-input">
+          <input type="email" placeholder="Email" ng-model="user.email">
+        </label>
+        <label class="item item-input">
+          <input type="password" placeholder="Lösenord" ng-model="user.password">
+        </label>
+      </ion-list>
+      <button class="button button-calm button-block button-large" ng-disabled="!user.user_id || !user.firstname || !user.firstname || !user.email || !user.password" ng-click="register()">Registrera</button>
+    </form>
+  </ion-content>
+</ion-view>

@@ -1,8 +1,8 @@
 <ion-view view-title="Händelser">
   <ion-content class="has-header has-tabs animate-blinds">
   <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher> 
-    <div ng-controller="FeedCtrl" ng-repeat="f in feed" class="card" >
-      <div class="item item-avatar item-text-wrap" >
+    <div ng-controller="FeedCtrl" ng-repeat="f in feed" class="card">
+      <a class="item item-avatar item-text-wrap" href="#/tab/feed/{{f.id}}">
         <span class="avatar" style="background-image: url('{{f.image}}');"></span>
         <div ng-if="f.multi == 1"><strong>{{f.firstname}} {{f.lastname}}</strong> buys a {{f.name}}.</div>
         <div ng-if="f.multi > 1"><strong>{{f.firstname}} {{f.lastname}}</strong> gettin' loooaded with {{f.multi}} {{f.name}}.</div>
@@ -16,7 +16,7 @@
             <i class="icon ion-clock"></i> <span>{{f.date | amTimeAgo}} ({{f.date | amCalendar | amDateFormat :'YYYY/MM/DD'}})</span>
           </div>
         </div>
-      </div>
+      </a>
     </div>
   </ion-content>
 </ion-view>

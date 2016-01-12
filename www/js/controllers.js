@@ -95,17 +95,69 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     // };
 })
 
-.controller('LoginCtrl', function($scope, $timeout, $stateParams, ionicMaterialInk, $state) {
-    $scope.user = {};
-    // $scope.$parent.clearFabs();
-    // $timeout(function() {
-    //     $scope.$parent.hideHeader();
-    // }, 0);
-    // ionicMaterialInk.displayEffect();
-    $scope.login = function() {
-        $state.go('tab.fav');
-        // window.localStorage["user_id"] = user.username;
-    }    
+.controller('LoginCtrl', function($scope, ionicMaterialInk, $ionicPopup, $state, DBService) {
+  // Check if user is already logged in
+  if(window.localStorage['email']) {
+    $state.go('tab.fav');
+  }
+
+  // Create javascript object to get user parameters
+  $scope.user = {};
+
+  // Perform login function
+  $scope.login = function() {
+    console.log("email = "+$scope.user.email);
+    console.log("pw = "+$scope.user.password);
+    var sendData = {'tag':"login", 'email':$scope.user.email, 'password':$scope.user.password};
+
+    DBService.sendToDB(sendData, true).then(function(promise) {
+      if (promise.data.success === 1) {
+        if (promise.data.user.block === "1") {
+            $ionicPopup.alert({
+                title : "Åtkomst nekad",
+                subTitle: "Du har tyvärr blivit blockerad att använda tjänsten"
+            });
+        } else {
+        // Store user in cache
+        window.localStorage['email'] = $scope.user.email;
+
+        // Go to global feed
+        $state.go('tab.feed');
+        }
+      }
+    });
+  }        
+})
+
+.controller('RegisterCtrl', function($scope, $state, $ionicPopup, DBService) {
+  // Create javascript object to get user parameters
+  $scope.user = {};
+
+  // Register user
+  $scope.register = function() {
+    var firstname = $scope.user.firstname.charAt(0).toUpperCase() + $scope.user.firstname.slice(1);
+    var lastname = $scope.user.lastname.charAt(0).toUpperCase() + $scope.user.lastname.slice(1);
+
+    var sendData = {'tag':"register", 'user_id':$scope.user.user_id, 'email':$scope.user.email, 'password':$scope.user.password, 'firstname':firstname, 'lastname':lastname};
+
+    DBService.sendToDB(sendData, true).then(function(promise) {
+      if (promise.data.success === 1) {
+        // Store user in cache
+        window.localStorage['user_id'] = $scope.user.user_id;
+        window.localStorage['email'] = $scope.user.email;
+        window.localStorage['firstname'] = firstname;
+        window.localStorage['lastname'] = lastname;
+
+        // Display welcome message
+        $ionicPopup.alert({
+          title : "Registering klar!",
+          subTitle: "Välkommen "+firstname+" "+lastname+"!"
+        }).then(function(res) {
+          $state.go('tab.fav');
+        });
+      }
+    });
+  }
 })
 
 .controller('FriendsCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
@@ -127,13 +179,20 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     ionicMaterialInk.displayEffect();
 })
 
-.controller('ProfileCtrl', function($scope, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, DBService) {
+.controller('ProfileCtrl', function($scope, $state, $timeout, ionicMaterialMotion, ionicMaterialInk, DBService) {
     // Set Header
     // $scope.$parent.showHeader();
     // $scope.$parent.clearFabs();
     $scope.isExpanded = true;
     // $scope.$parent.setExpanded(true);
     // $scope.$parent.setHeaderFab(false);
+
+    $scope.logout = function() {
+      window.localStorage['email'] = "";
+      window.localStorage['firstname'] = "";
+      window.localStorage['lastname'] = "";
+      $state.go('login');
+    }
 
      $scope.doRefresh = function() {
         var sendData = {'tag':'getProfile', 'user_id': '1'};
@@ -238,6 +297,11 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     // ionicMaterialInk.displayEffect();
     
 
+})
+
+.controller('CommentsCtrl', function($scope, $stateParams, DBService) {
+  $scope.hello = "Hellluuuuu";
+  $scope.event_id = $stateParams.event_id;
 })
 
 .controller('FavCtrl', function($scope, $ionicPlatform, ionicMaterialMotion, DBService) { //, $cordovaVibration) {

@@ -86,6 +86,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova','ionic.se
     controller: 'LoginCtrl'
   })
 
+  .state('register', {
+    url: '/register',
+    templateUrl: 'templates/register.html',
+    controller: 'RegisterCtrl'
+  })  
+
   // setup an abstract state for the tabs directive
   .state('tab', {
     url: '/tab',
@@ -101,6 +107,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova','ionic.se
       'tab-feed': {
         templateUrl: 'templates/tab-feed.html',
         controller: 'FeedCtrl'
+      }
+    }
+  })
+  .state('tab.feed-comments', {
+    url: '/feed/:event_id',
+    views: {
+      'tab-feed': {
+        templateUrl: 'templates/tab-feed-comments.html',
+        controller: 'CommentsCtrl'
       }
     }
   })
