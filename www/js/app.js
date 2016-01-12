@@ -73,10 +73,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova','ionic.se
   // Turn off caching for demo simplicity's sake
   $ionicConfigProvider.views.maxCache(0);
 
-  /*
+  
   // Turn off back button text
-  $ionicConfigProvider.backButton.previousTitleText(false);
-  */
+  $ionicConfigProvider.backButton.text('').previousTitleText(false);
+  
 
   $stateProvider
 
