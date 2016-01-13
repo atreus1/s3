@@ -3,96 +3,8 @@
 
 angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ngCordova','ionic.service.core', 'ionic.service.push'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout) {
-    // Form data for the login modal
-    $scope.loginData = {};
-    $scope.isExpanded = false;
-    $scope.hasHeaderFabLeft = false;
-    $scope.hasHeaderFabRight = false;
+.controller('AppCtrl', function($scope) {
 
-    // var navIcons = document.getElementsByClassName('ion-navicon');
-    // for (var i = 0; i < navIcons.length; i++) {
-    //     navIcons.addEventListener('click', function() {
-    //         this.classList.toggle('active');
-    //     });
-    // }
-
-    // ////////////////////////////////////////
-    // // Layout Methods
-    // ////////////////////////////////////////
-
-    // $scope.hideNavBar = function() {
-    //     document.getElementsByTagName('ion-nav-bar')[0].style.display = 'none';
-    //     document.getElementsByTagName('ion-footer-bar')[0].style.display = 'none';
-    // };
-
-    // $scope.showNavBar = function() {
-    //     document.getElementsByTagName('ion-nav-bar')[0].style.display = 'block';
-    //     document.getElementsByTagName('ion-footer-bar')[0].style.display = 'block';
-    // };
-
-    // $scope.noHeader = function() {
-    //     var content = document.getElementsByTagName('ion-content');
-    //     for (var i = 0; i < content.length; i++) {
-    //         if (content[i].classList.contains('has-header')) {
-    //             content[i].classList.toggle('has-header');
-    //         }
-    //         if (content[i].classList.contains('has-footer')) {
-    //             content[i].classList.toggle('has-footer');
-    //         }
-    //     }
-    // };
-
-    // $scope.setExpanded = function(bool) {
-    //     $scope.isExpanded = bool;
-    // };
-
-    // $scope.setHeaderFab = function(location) {
-    //     var hasHeaderFabLeft = false;
-    //     var hasHeaderFabRight = false;
-
-    //     switch (location) {
-    //         case 'left':
-    //             hasHeaderFabLeft = true;
-    //             break;
-    //         case 'right':
-    //             hasHeaderFabRight = true;
-    //             break;
-    //     }
-
-    //     $scope.hasHeaderFabLeft = hasHeaderFabLeft;
-    //     $scope.hasHeaderFabRight = hasHeaderFabRight;
-    // };
-
-    // $scope.hasHeader = function() {
-    //     var content = document.getElementsByTagName('ion-content');
-    //     for (var i = 0; i < content.length; i++) {
-    //         if (!content[i].classList.contains('has-header')) {
-    //             content[i].classList.toggle('has-header');
-    //         }
-    //         if (!content[i].classList.contains('has-footer')) {
-    //             content[i].classList.toggle('has-footer');
-    //         }
-    //     }
-
-    // };
-
-    // $scope.hideHeader = function() {
-    //     $scope.hideNavBar();
-    //     $scope.noHeader();
-    // };
-
-    // $scope.showHeader = function() {
-    //     $scope.showNavBar();
-    //     $scope.hasHeader();
-    // };
-
-    // $scope.clearFabs = function() {
-    //     var fabs = document.getElementsByClassName('button-fab');
-    //     if (fabs.length && fabs.length > 1) {
-    //         fabs[0].remove();
-    //     }
-    // };
 })
 
 .controller('LoginCtrl', function($scope, ionicMaterialInk, $ionicPopup, $state, DBService) {
@@ -106,27 +18,30 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
 
   // Perform login function
   $scope.login = function() {
-    console.log("email = "+$scope.user.email);
-    console.log("pw = "+$scope.user.password);
     var sendData = {'tag':"login", 'email':$scope.user.email, 'password':$scope.user.password};
 
     DBService.sendToDB(sendData, true).then(function(promise) {
       if (promise.data.success === 1) {
         if (promise.data.user.block === "1") {
-            $ionicPopup.alert({
-                title : "Åtkomst nekad",
-                subTitle: "Du har tyvärr blivit blockerad att använda tjänsten"
-            });
+          $ionicPopup.alert({
+            title : "Åtkomst nekad",
+            subTitle: "Du har tyvärr blivit blockerad att använda tjänsten"
+          });
         } else {
-        // Store user in cache
-        window.localStorage['email'] = $scope.user.email;
+          // Store user in cache
+          console.log(promise.data);
+          window.localStorage['user_id'] = promise.data.user.user_id;
+          window.localStorage['email'] = $scope.user.email;
+          window.localStorage['firstname'] = promise.data.user.firstname;
+          window.localStorage['lastname'] = promise.data.user.lastname;
+          window.localStorage['debt'] = promise.data.user.debt;
 
-        // Go to global feed
-        $state.go('tab.feed');
+          // Go to global feed
+          $state.go('tab.feed');
         }
       }
     });
-  }        
+  }
 })
 
 .controller('RegisterCtrl', function($scope, $state, $ionicPopup, DBService) {
@@ -147,6 +62,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
         window.localStorage['email'] = $scope.user.email;
         window.localStorage['firstname'] = firstname;
         window.localStorage['lastname'] = lastname;
+        window.localStorage['debt'] = 0;
 
         // Display welcome message
         $ionicPopup.alert({
@@ -160,17 +76,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
   }
 })
 
-.controller('FriendsCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
-    // Set Header
-    // $scope.$parent.showHeader();
-    // $scope.$parent.clearFabs();
-    // $scope.$parent.setHeaderFab('left');
-
-    // Delay expansion
-    $timeout(function() {
-        $scope.isExpanded = true;
-        // $scope.$parent.setExpanded(true);
-    }, 300);
+.controller('FriendsCtrl', function($scope, ionicMaterialInk, ionicMaterialMotion) {
 
     // Set Motion
     ionicMaterialMotion.fadeSlideInRight();
@@ -179,13 +85,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     ionicMaterialInk.displayEffect();
 })
 
-.controller('ProfileCtrl', function($scope, $state, $timeout, ionicMaterialMotion, ionicMaterialInk, DBService) {
-    // Set Header
-    // $scope.$parent.showHeader();
-    // $scope.$parent.clearFabs();
-    $scope.isExpanded = true;
-    // $scope.$parent.setExpanded(true);
-    // $scope.$parent.setHeaderFab(false);
+.controller('ProfileCtrl', function($scope, $state, ionicMaterialMotion, ionicMaterialInk, DBService) {
 
     $scope.logout = function() {
       window.localStorage['email'] = "";
@@ -241,13 +141,6 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
             $scope.doRefresh();
         });
 
-    // Set Motion
-    //$timeout(function() {
-    //    ionicMaterialMotion.slideUp({
-    //        selector: '.slide-up'
-    //    });
-    //}, 300);
-
  // Set Motion
     ionicMaterialMotion.blinds();
 
@@ -255,12 +148,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     ionicMaterialInk.displayEffect();
 })
 
-.controller('FeedCtrl', function($scope, $state, $filter, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, DBService) {
-    // $scope.$parent.showHeader();
-    // $scope.$parent.clearFabs();
-    $scope.isExpanded = true;
-    // $scope.$parent.setExpanded(true);
-    // $scope.$parent.setHeaderFab(false);
+.controller('FeedCtrl', function($scope, ionicMaterialMotion, ionicMaterialInk, DBService) {
 
     function getColor() {
         var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
@@ -299,18 +187,20 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
 
 })
 
-.controller('CommentsCtrl', function($scope, $stateParams, DBService) {
+.controller('ViewCommentsCtrl', function($scope, $stateParams, DBService) {
   $scope.hello = "Hellluuuuu";
   $scope.event_id = $stateParams.event_id;
+  $scope.event = {};
+
+  var sendData = {'tag':"getFeedWithID", 'id':$stateParams.event_id};
+  DBService.sendToDB(sendData, false).then(function(promise) {
+    if (promise.data.success === 1) {
+      console.log(promise.data);
+    }
+  });
 })
 
 .controller('FavCtrl', function($scope, $ionicPlatform, ionicMaterialMotion, DBService) { //, $cordovaVibration) {
-    // Set Header
-    // $scope.$parent.showHeader();
-    // $scope.$parent.clearFabs();
-    // $scope.$parent.setHeaderFab('left');
-    // $scope.isExpanded = true;
-    // $scope.$parent.setExpanded(true);
     $scope.items = {};
     $scope.taps = 0;
 
@@ -370,85 +260,41 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     // });
 })
 
-.controller('ScanCtrl', function($scope, $ionicPlatform, DBService, $cordovaVibration, $timeout, ionicMaterialInk, ionicMaterialMotion) {
-    $scope.loading = false;
-    $scope.purchaseComplete = false;
+.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicHistory, $state, DBService, $cordovaVibration) {
+  $scope.buy = function(barcode) {
+    var sendData = {'tag':'purchaseBarcodeItem', 'user_id':window.localStorage['user_id'], 'barcode':barcode};        
 
-    $scope.name = "";
-    $scope.price = "";
-    $scope.volume = "";
-    $scope.alcohol = "";
-    $scope.image = "";
+    DBService.sendToDB(sendData, true).then(function(promise) {
+      if (promise.data.success === 1) {
+        if (window.cordova) {
+          $ionicPlatform.ready(function() {
+            $cordovaVibration.vibrate(100);
+            $state.go('tab.feed');
+          });
+        }
+      }
+    });
+  }
 
-    $scope.message = "";
-
-    $scope.randomMessage = function() {
-        var messages = [
-            "DDDJF",
-            "Ahh mumma, fan så gott med "+$scope.name+"!",
-            "Drick då!",
-            "Svagdricka?!",
-            "Häv en 12:a då!",
-            "Du vågar aldrig...",
-            $scope.price+" spänn? Hur fan har du råd med det?",
-            $scope.price+" ohhh där ryker studiebidraget!",
-            $scope.alcohol+"%? Ska du bli nykter eller?",
-            "Fy fan vad äckligt! Bäsk är tamifan godare.",
-            "Kan du läsa det här är du för nykter.",
-            "Se för fan till att inte spilla nu."
-        ];
-
-        var random = Math.floor((Math.random() * messages.length) + 1);
-        $scope.message = messages[random];
-    }
-
-
-    $scope.buy = function(barcode) {
-        var sendData = {'tag':'purchaseBarcodeItem', 'user_id': '1', 'barcode':barcode};        
-
-        DBService.sendToDB(sendData, true).then(function(promise) {
-            if (promise.data.success === 1) {
-                $scope.loading = false;
-
-                if (window.cordova) {
-                    $ionicPlatform.ready(function() {
-                        // Vibrate 100ms
-                        $cordovaVibration.vibrate(100);
-
-                        $scope.name = promise.data.item.name;
-                        $scope.price = promise.data.item.price;
-                        $scope.volume = promise.data.item.volume;
-                        $scope.alcohol = promise.data.item.alcohol;
-                        $scope.image = promise.data.item.image;
-
-                        $scope.randomMessage();
-                        $scope.purchaseComplete = true;
-                    });
-                }
-            }
-        });        
-    }
-
-    if (window.cordova) {
-        $scope.loading = true;
-        $ionicPlatform.ready(function() {
-            cordova.plugins.barcodeScanner.scan(
-                function (result) {
-                    if (result.cancelled) {
-                        // Vad ska vi göra här? Visa en lista istället?
-                    } else {
-                        $scope.buy(result.text);
-                    }
-                }, 
-                function (error) {
-                    //alert("Scanning failed: " + error);
-                }
-            );
-        });        
-    } else {
-        $scope.infoText = "Denna funktion fungerar ej i webbläsaren.";
-    }
-
-})
-
-;
+  if (window.cordova) {    
+    $ionicPlatform.ready(function() {
+      cordova.plugins.barcodeScanner.scan(
+        function (result) {
+          if (result.cancelled) {
+            // Vad ska vi göra här? Visa en lista istället?
+            $ionicHistory.goBack();
+          } else {
+            $scope.buy(result.text);
+          }
+        }, 
+        function (error) {
+          //alert("Scanning failed: " + error);
+          console.log("Issue with barcode scanner within app");
+          $ionicHistory.goBack();
+        }
+      );
+    });        
+  } else {
+    $scope.infoText = "Denna funktion fungerar ej i webbläsaren.";
+  }
+});
