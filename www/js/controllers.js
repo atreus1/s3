@@ -164,6 +164,8 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
         angular.forEach($scope.feed, function(c) {
           c.date = new Date(c.date*1000);
           c.datediff = moment(c.date).diff(moment(new Date), 'days');
+          if(c.comments > 0)
+            c.multi = c.multi-(c.comments-1);
           if (!c.image) {
             c.image = getColor();
           }
@@ -187,7 +189,6 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
   $scope.firstname = $stateParams.tmp[0];
   $scope.lastname = $stateParams.tmp[1];
   $scope.item = $stateParams.tmp[2];
-  $scope.multi = $stateParams.tmp[3];
   $scope.event = {};
 
   var sendData = {'tag':"getComments", 'id':$stateParams.event_id};

@@ -1,6 +1,5 @@
 <ion-view view-title="Favoriter">
     <ion-content class="has-header has-tabs">
-     <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher> 
         <div class="list half">
             <div ng-controller="FavCtrl" ng-repeat="i in items" ng-if="$even" on-hold="onHold(i.item_id, count)" ng-init="count=0" class="card card-gallery item item-text-wrap">
                 <div class="ink dark-bg" on-tap="count = count + 1" style="background: url('{{i.image}}');">
