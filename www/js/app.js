@@ -111,7 +111,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova','ionic.se
     }
   })
   .state('tab.feed-comments', {
-    url: '/feed/:event_id',
+    url: '/feed/:event_id?tmp',
     views: {
       'tab-feed': {
         templateUrl: 'templates/tab-feed-comments.html',

@@ -131,3 +131,27 @@ div.spinner {
     position: fixed;
     bottom: 0;
 }
+
+/* Feed avatar
+===================================*/
+
+.item-avatar .pink {
+  background: #ff80ab; }
+.item-avatar .green {
+  background: #b9f6ca; }
+.item-avatar .blue {
+  background: #84ffff; }
+.item-avatar .purple {
+  background: #b388ff; }
+
+  /* Fav avatar
+===================================*/
+
+.ink .pink {
+  background: #ff80ab; }
+.ink .green {
+  background: #b9f6ca; }
+.ink .blue {
+  background: #84ffff; }
+.ink .purple {
+  background: #b388ff; }

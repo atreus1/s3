@@ -1,23 +1,10 @@
-<ion-view view-title="Kommentarer">
-  <ion-content class="has-header has-tabs animate-blinds">
-    <p>Kommentarer till firstname lastname köper en item</p>
-    <p>{{hello}} id: {{event_id}}</p>
-    <div class="card">
-      <div class="item item-avatar item-text-wrap">
-        <span class="avatar" style="background-image: url('{{event.image}}');"></span>
-        <div ng-if="event.multi == 1"><strong>{{event.firstname}} {{event.lastname}}</strong> buys a {{event.name}}.</div>
-        <div ng-if="event.multi > 1"><strong>{{event.firstname}} {{event.lastname}}</strong> gettin' loooaded with {{event.multi}} {{event.name}}.</div>
-        <div class="card-footer text-right">
-          <i class="icon ion-chatbubbles positive"></i> 6
-          <i class="icon ion-heart assertive"></i> 23
-          <div class="pull-left" ng-if="f.datediff >= -1">
-            <i class="icon ion-clock"></i> <span>{{event.date | amTimeAgo}}</span> 
-          </div>
-          <div class="pull-left" ng-if="f.datediff < -1">
-            <i class="icon ion-clock"></i> <span>{{event.date | amTimeAgo}} ({{event.date | amCalendar | amDateFormat :'YYYY/MM/DD'}})</span>
-          </div>
-        </div>
-      </a>
-    </div>    
+<ion-view  view-title="<i class='icon ion-chatbubbles positive'></i> {{firstname}} {{lastname}} buys ... {{item}}.">
+  <ion-content class="has-header has-tabs">
+    <div ng-controller="FeedCtrl" ng-repeat="e in event" class="card">
+      <div class="item item-text-wrap">
+      <div><strong>{{e.firstname}} {{e.lastname}}</strong>           
+      <div class="pull-right">
+            <i class="icon ion-clock"></i> <span><small>{{e.date | amTimeAgo}}</small></span> 
+      </div> <br/> {{e.comment}}</div>
   </ion-content>
 </ion-view>

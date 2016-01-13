@@ -25,7 +25,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
         if (promise.data.user.block === "1") {
           $ionicPopup.alert({
             title : "Åtkomst nekad",
-            subTitle: "Du har tyvärr blivit blockerad att använda tjänsten"
+            subTitle: "Du har blivit blockerad att använda tjänsten"
           });
         } else {
           // Store user in cache
@@ -95,7 +95,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     }
 
      $scope.doRefresh = function() {
-        var sendData = {'tag':'getProfile', 'user_id': '1'};
+        var sendData = {'tag':'getProfile', 'user_id': window.localStorage['user_id']};
             DBService.sendToDB(sendData, false).then(function(promise) {
               if (promise.data.success === 1) {
                 $scope.profile = promise.data.profile; 
@@ -150,9 +150,9 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
 
 .controller('FeedCtrl', function($scope, ionicMaterialMotion, ionicMaterialInk, DBService) {
   function getColor() {
-    var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
+    var color = ['pink', 'green', 'blue', 'purple'];
     color = color[Math.floor(Math.random()*color.length)];
-    return "../img/" + color;
+    return color;
   }
       
   var sendData = {'tag':'getFeed'};
@@ -160,6 +160,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
         $scope.feed = promise.data.feed;
+        console.log($scope.feed);
         angular.forEach($scope.feed, function(c) {
           c.date = new Date(c.date*1000);
           c.datediff = moment(c.date).diff(moment(new Date), 'days');
@@ -178,18 +179,22 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
   $scope.$on('$ionicView.loaded', function(){
       $scope.doRefresh();
   });
-  ionicMaterialMotion.blinds();
+  //ionicMaterialMotion.blinds();
 })
 
 .controller('ViewCommentsCtrl', function($scope, $stateParams, DBService) {
-  $scope.hello = "Hellluuuuu";
   $scope.event_id = $stateParams.event_id;
+  $scope.firstname = $stateParams.tmp[0];
+  $scope.lastname = $stateParams.tmp[1];
+  $scope.item = $stateParams.tmp[2];
+  $scope.multi = $stateParams.tmp[3];
   $scope.event = {};
 
-  var sendData = {'tag':"getFeedWithID", 'id':$stateParams.event_id};
+  var sendData = {'tag':"getComments", 'id':$stateParams.event_id};
   DBService.sendToDB(sendData, false).then(function(promise) {
     if (promise.data.success === 1) {
-      console.log(promise.data);
+      console.log(promise.data.event);
+      $scope.event = promise.data.event;
     }
   });
 })
@@ -223,7 +228,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
         return "../img/" + color;
     }
 
-    var sendData = {'tag':'getMostBuyedItem', 'user_id':'1'};
+    var sendData = {'tag':'getMostBuyedItem', 'user_id':window.localStorage['user_id']};
 
     $scope.doRefresh = function() {
         DBService.sendToDB(sendData, false).then(function(promise) {
