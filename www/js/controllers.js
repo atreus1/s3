@@ -1,7 +1,7 @@
 /* global angular, document, window */
 'use strict';
 
-angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ngCordova','ionic.service.core', 'ionic.service.push'])
+angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ionic.service.core', 'ionic.service.push'])
 
 .controller('AppCtrl', function($scope) {
 
@@ -190,14 +190,32 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
   $scope.lastname = $stateParams.tmp[1];
   $scope.item = $stateParams.tmp[2];
   $scope.event = {};
+  $scope.comment = {};
 
-  var sendData = {'tag':"getComments", 'id':$stateParams.event_id};
-  DBService.sendToDB(sendData, false).then(function(promise) {
-    if (promise.data.success === 1) {
-      console.log(promise.data.event);
-      $scope.event = promise.data.event;
-    }
+  $scope.doRefresh = function() {
+    var sendData = {'tag':"getComments", 'id':$stateParams.event_id};
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        console.log(promise.data.event);
+        $scope.event = promise.data.event;
+      }
+    });
+  }
+
+  $scope.addComment = function() {
+    var sendData = {'tag':"addComment", 'user_id':window.localStorage['user_id'], 'event_id':$scope.event_id, 'comment':$scope.comment.text};
+    DBService.sendToDB(sendData, true).then(function(promise) {
+      if (promise.data.success === 1) {
+        $scope.doRefresh();
+        $scope.comment.text ="";
+      }
+    });
+  }
+
+  $scope.$on('$ionicView.loaded', function(){
+      $scope.doRefresh();
   });
+
 })
 
 .controller('FavCtrl', function($scope, $ionicPlatform, ionicMaterialMotion, DBService) { //, $cordovaVibration) {
@@ -205,9 +223,8 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     $scope.taps = 0;
 
     $scope.onHold = function(item, count) {   
-        if (!count) {
+        if (!count) 
             count = 1;
-        }
         var sendData = {'tag':'purchaseItem', 'user_id': window.localStorage['user_id'], 'item_id':item, 'count':count};
         DBService.sendToDB(sendData, false).then(function(promise) {
             if (promise.data.success === 1) {
@@ -226,7 +243,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     function getColor() {
         var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
         color = color[Math.floor(Math.random()*color.length)];
-        return "../img/" + color;
+        return "/img/" + color;
     }
 
     var sendData = {'tag':'getMostBuyedItem', 'user_id':window.localStorage['user_id']};
@@ -235,6 +252,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
         DBService.sendToDB(sendData, false).then(function(promise) {
           if (promise.data.success === 1) {
              $scope.items = promise.data.items;
+             console.log($scope.items);
              angular.forEach($scope.items, function(c) {
                     if (!c.image)
                     c.image = getColor();
