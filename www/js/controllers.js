@@ -7,11 +7,14 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
 
 })
 
-.controller('LoginCtrl', function($scope, ionicMaterialInk, $ionicPopup, $state, DBService) {
-  // Check if user is already logged in
-  if(window.localStorage['email']) {
-    $state.go('tab.fav');
-  }
+.controller('LoginCtrl', function($scope, $ionicPopup, $state, DBService) {
+
+  $scope.$on('$ionicView.loaded', function() {
+    // Check if user is already logged in
+    if(window.localStorage['email']) {
+      $state.go('tab.fav');
+    }
+  });
 
   // Create javascript object to get user parameters
   $scope.user = {};
@@ -47,32 +50,88 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
 .controller('RegisterCtrl', function($scope, $state, $ionicPopup, DBService) {
   // Create javascript object to get user parameters
   $scope.user = {};
+  $scope.user.user_id = window.localStorage['user_id'];
+  $scope.user.firstname = window.localStorage['firstname'];
+  $scope.user.lastname = window.localStorage['lastname'];
 
   // Register user
   $scope.register = function() {
-    var firstname = $scope.user.firstname.charAt(0).toUpperCase() + $scope.user.firstname.slice(1);
-    var lastname = $scope.user.lastname.charAt(0).toUpperCase() + $scope.user.lastname.slice(1);
+    if ($scope.user.password !== $scope.user.repeat_password) {
+      $ionicPopup.alert({
+        title : "Fel",
+        subTitle: "Lösenorden matchar inte! Var god försök igen"
+      }).then(function(res) {
+        $scope.user.password = "";
+        $scope.user.repeat_password = "";
+      });
+    } else {
+      var sendData = {'tag':"register", 'user_id':window.localStorage['user_id'], 'email':$scope.user.email, 'password':$scope.user.password};
 
-    var sendData = {'tag':"register", 'user_id':$scope.user.user_id, 'email':$scope.user.email, 'password':$scope.user.password, 'firstname':firstname, 'lastname':lastname};
+      DBService.sendToDB(sendData, true).then(function(promise) {
+        if (promise.data.success === 1) {
 
-    DBService.sendToDB(sendData, true).then(function(promise) {
-      if (promise.data.success === 1) {
-        // Store user in cache
-        window.localStorage['user_id'] = $scope.user.user_id;
-        window.localStorage['email'] = $scope.user.email;
-        window.localStorage['firstname'] = firstname;
-        window.localStorage['lastname'] = lastname;
-        window.localStorage['debt'] = 0;
+          window.localStorage['email'] = $scope.user.email;
+          window.localStorage['debt'] = 0;
 
-        // Display welcome message
-        $ionicPopup.alert({
-          title : "Registering klar!",
-          subTitle: "Välkommen "+firstname+" "+lastname+"!"
-        }).then(function(res) {
-          $state.go('tab.fav');
-        });
-      }
-    });
+          $ionicPopup.alert({
+            title : "Registering klar!",
+            subTitle: "Välkommen "+window.localStorage['firstname']+" "+window.localStorage['lastname']+"!"
+          }).then(function(res) {
+            $state.go('tab.feed');
+          });
+        }
+      });
+    }
+  }
+})
+
+.controller('IDCtrl', function($scope, $state, $ionicPopup, DBService) {
+  $scope.user = {};
+
+  $scope.checkID = function() {
+    var isOK = false;
+    var id = $scope.user.user_id;
+
+    if (id.length === 10) {
+      isOK = true;
+    } else if (id.length === 12) {
+      id = id.substring(2, 12);
+      isOK = true;
+    } else {
+      $ionicPopup.alert({
+        title : "Ogiltigt personnummer",
+        subTitle: "Vänligen ange personnummer på formen 123456XXXX"
+      }).then(function(res) {
+        $scope.user.user_id = "";
+      });
+    }
+
+    if (isOK) {
+      var sendData = {'tag':"isUserExisting", 'user_id':id};
+      DBService.sendToDB(sendData, true).then(function(promise) {
+        if (promise.data.success === 1) {
+          // Store user in cache
+          console.log("user_id exists in db");
+          console.log(promise.data);
+
+          if (promise.data.user.email === "") {
+            // user is new, should enter pw and email on new page
+            window.localStorage['user_id'] = id;
+            window.localStorage['firstname'] = promise.data.user.firstname.charAt(0).toUpperCase() + promise.data.user.firstname.slice(1);
+            window.localStorage['lastname'] = promise.data.user.lastname.charAt(0).toUpperCase() + promise.data.user.lastname.slice(1);
+
+            $state.go('register');
+          } else {
+            $ionicPopup.alert({
+              title : "Användare redan registrerad!",
+              subTitle: "Ditt personnummer finns redan med i systemet. Logga in med din email och ditt lösenord!"
+            }).then(function(res) {
+              $state.go('login');
+            });
+          }
+        }
+      });
+    }
   }
 })
 

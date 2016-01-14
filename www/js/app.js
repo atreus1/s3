@@ -92,6 +92,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova','ionic.se
     controller: 'RegisterCtrl'
   })  
 
+  .state('id', {
+    url: '/id',
+    templateUrl: 'templates/id.html',
+    controller: 'IDCtrl'
+  })
+
   // setup an abstract state for the tabs directive
   .state('tab', {
     url: '/tab',

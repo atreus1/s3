@@ -23,6 +23,14 @@ p {
     height: 100%;
 }
 
+.has-header {
+    top: 45px;
+}
+
+.inputField {
+  background-color: rgba(40,40,40, 0.75);
+}
+
 .login-container {
     background: url("../img/login.jpg") no-repeat center center fixed; 
     -webkit-background-size: cover;
@@ -30,6 +38,19 @@ p {
     background-size: cover;
 }
 
+.id-container {
+    background: url("../img/alc1.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+}
+
+.register-container {
+    background: url("../img/alc2.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+}
 .scan-bg {
 /*    background: url("../img/barcode_bg.png") no-repeat center center fixed; 
     -webkit-background-size: cover;
@@ -106,9 +127,9 @@ div.spinner {
 }*/
 
 
-.has-header {
+/*.has-header {
     top: 49px;
-}
+}*/
 
 .has-tabs {
     bottom: 60px;
