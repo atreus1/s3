@@ -190,14 +190,32 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
   $scope.lastname = $stateParams.tmp[1];
   $scope.item = $stateParams.tmp[2];
   $scope.event = {};
+  $scope.comment = {};
 
-  var sendData = {'tag':"getComments", 'id':$stateParams.event_id};
-  DBService.sendToDB(sendData, false).then(function(promise) {
-    if (promise.data.success === 1) {
-      console.log(promise.data.event);
-      $scope.event = promise.data.event;
-    }
+  $scope.doRefresh = function() {
+    var sendData = {'tag':"getComments", 'id':$stateParams.event_id};
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        console.log(promise.data.event);
+        $scope.event = promise.data.event;
+      }
+    });
+  }
+
+  $scope.addComment = function() {
+    var sendData = {'tag':"addComment", 'user_id':window.localStorage['user_id'], 'event_id':$scope.event_id, 'comment':$scope.comment.text};
+    DBService.sendToDB(sendData, true).then(function(promise) {
+      if (promise.data.success === 1) {
+        $scope.doRefresh();
+        $scope.comment.text ="";
+      }
+    });
+  }
+
+  $scope.$on('$ionicView.loaded', function(){
+      $scope.doRefresh();
   });
+
 })
 
 .controller('FavCtrl', function($scope, $ionicPlatform, ionicMaterialMotion, DBService) { //, $cordovaVibration) {
@@ -205,9 +223,8 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
     $scope.taps = 0;
 
     $scope.onHold = function(item, count) {   
-        if (!count) {
+        if (!count) 
             count = 1;
-        }
         var sendData = {'tag':'purchaseItem', 'user_id': window.localStorage['user_id'], 'item_id':item, 'count':count};
         DBService.sendToDB(sendData, false).then(function(promise) {
             if (promise.data.success === 1) {
