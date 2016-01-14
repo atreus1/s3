@@ -1,18 +1,21 @@
 <ion-view hide-nav-bar="true" hide-back-button="true" view-title="Logga in">
-  <ion-content scroll="false" class="login-container">
-    <section>
-      <div class="col header text-center">
-         <!-- <img src="./img/ionic.png" class = "logo" /> -->
-         <h1 style="margin-top:120px;">streck.app</h1>
-      </div>
-      <div class="list">
-        <ion-md-input placeholder="email" highlight-color="balanced" type="email" ng-model="user.email"></ion-md-input>
-        <ion-md-input placeholder="lösenord" highlight-color="energized" type="password" ng-model="user.password"></ion-md-input>
-      </div>
-      <div class="padding">
-        <button class="button button-full button-assertive ink" ng-disabled="!user.email || !user.password" ng-click="login()">Logga in</button>        
-      </div>
-      <a href="#/register" class="button button-light button-clear button-block ">Eller skapa konto</a>
-	</section>	
+  <ion-content scroll="false" class="padding login-container">
+    <div class="col header text-center">
+       <h1 style="margin-top:120px;">streck.app</h1>
+    </div>  
+    <form class="list">
+      <ion-list>
+        <label class="item item-input inputField">
+          <input style="color:white;" type="email" placeholder="Email" ng-model="user.email">
+        </label>
+        <br>
+        <label class="item item-input inputField">
+          <input style="color:white;" type="password" placeholder="Lösenord" ng-model="user.password">
+        </label>
+      </ion-list>
+      <div class="spacer" style="height: 40px;"></div>
+      <button class="button button-positive button-block button-large" ng-disabled="!user.email || !user.password" ng-click="login()">Logga in</button>
+      <a href="#/id" class="button button-light button-clear button-block ">Ny användare</a>
+    </form>
   </ion-content>
 </ion-view>

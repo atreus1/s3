@@ -9,7 +9,7 @@ angular.module('starter.services', [])
             console.log(data.error_msg);
             if (showPopup) {
               var welcomePopup = $ionicPopup.alert({
-                title : "Unexpected error",
+                title : "Fel",
                 subTitle: data.error_msg
               });
             }
