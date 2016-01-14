@@ -1,4 +1,4 @@
-<ion-view  view-title="<i class='icon ion-chatbubbles positive'></i> {{firstname}} {{lastname}} buys ... {{item}}.">
+<ion-view  view-title="<i class='icon ion-chatbubbles positive'></i> {{firstname}} buys ... {{item}}.">
   <ion-content class="has-header has-tabs">
     <div ng-controller="FeedCtrl" ng-repeat="e in event" class="card">
       <div class="item item-text-wrap">
@@ -6,5 +6,10 @@
       <div class="pull-right">
             <i class="icon ion-clock"></i> <span><small>{{e.date | amTimeAgo}}</small></span> 
       </div> <br/> {{e.comment}}</div>
+      </div>
+      </div>
+      ## INPUT FIELD ##
+      ## SUBMIT ##
+      ## HERE ##
   </ion-content>
 </ion-view>

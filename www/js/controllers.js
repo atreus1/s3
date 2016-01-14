@@ -1,7 +1,7 @@
 /* global angular, document, window */
 'use strict';
 
-angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ngCordova','ionic.service.core', 'ionic.service.push'])
+angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ionic.service.core', 'ionic.service.push'])
 
 .controller('AppCtrl', function($scope) {
 
@@ -226,7 +226,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     function getColor() {
         var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
         color = color[Math.floor(Math.random()*color.length)];
-        return "../img/" + color;
+        return "/img/" + color;
     }
 
     var sendData = {'tag':'getMostBuyedItem', 'user_id':window.localStorage['user_id']};
@@ -235,6 +235,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
         DBService.sendToDB(sendData, false).then(function(promise) {
           if (promise.data.success === 1) {
              $scope.items = promise.data.items;
+             console.log($scope.items);
              angular.forEach($scope.items, function(c) {
                     if (!c.image)
                     c.image = getColor();
