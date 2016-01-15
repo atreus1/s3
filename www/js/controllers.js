@@ -429,7 +429,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
             window.localStorage['email'] = $scope.user.new_email;
             $ionicPopup.alert({
               title : "Klart!",
-              subTitle: "Ditt lösenord är nu bytt"
+              subTitle: "Ditt email är nu bytt"
             }).then(function(res) {
               $ionicHistory.goBack();
             });                            
