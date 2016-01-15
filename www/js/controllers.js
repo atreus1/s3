@@ -333,6 +333,8 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
             $state.go('tab.feed');
           });
         }
+      } else {
+        $ionicHistory.goBack(-1);
       }
     });
   }
@@ -342,8 +344,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
       cordova.plugins.barcodeScanner.scan(
         function (result) {
           if (result.cancelled) {
-            // Vad ska vi göra här? Visa en lista istället?
-            $ionicHistory.goBack();
+            $ionicHistory.goBack(-1);
           } else {
             $scope.buy(result.text);
           }
@@ -351,7 +352,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
         function (error) {
           //alert("Scanning failed: " + error);
           console.log("Issue with barcode scanner within app");
-          $ionicHistory.goBack();
+          $ionicHistory.goBack(-1);
         }
       );
     });        
