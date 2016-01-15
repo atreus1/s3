@@ -1,15 +1,21 @@
-<ion-view  view-title="<i class='icon ion-chatbubbles positive'></i> {{firstname}} buys ... {{item}}.">
+<ion-view  view-title="<i class='icon ion-chatbubbles positive'></i> {{firstname}} buys {{item}}">
   <ion-content class="has-header has-tabs">
-    <div ng-controller="FeedCtrl" ng-repeat="e in event" class="card">
+    <div ng-repeat="e in event" class="card">
       <div class="item item-text-wrap">
-      <div><strong>{{e.firstname}} {{e.lastname}}</strong>           
-      <div class="pull-right">
+        <div><strong>{{e.firstname}} {{e.lastname}}</strong>           
+          <div class="pull-right">
             <i class="icon ion-clock"></i> <span><small>{{e.date | amTimeAgo}}</small></span> 
-      </div> <br/> {{e.comment}}</div>
+          </div>
+          <br>
+          {{e.comment}}
+        </div>
       </div>
-      </div>
-
- <div class="list" style="padding: 10px;"><input type="text" placeholder="kommentera ..." ng-model="comment.text"> <button class="button button-block button-calm ink" data-ink-color="#9DEAFF" data-ink-opacity="1" ng-click="addComment();"> Lägg till </button> </div>
-                
+    </div>
+    <div class="card" style="background-color:none; box-shadow:none;">
+      <label class="item item-input inputField">
+        <input style="color: white;" type="text" placeholder="Kommentera..." ng-model="comment.text">
+      </label>
+    </div>
+    <button class="button button-block button-calm ink" data-ink-color="#9DEAFF" data-ink-opacity="1" ng-disabled="!comment.text" ng-click="addComment();"> Lägg till</button>
   </ion-content>
 </ion-view>

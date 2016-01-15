@@ -9,7 +9,7 @@
         <div ng-if="f.multi > 1"><strong>{{f.firstname}} {{f.lastname}}</strong> gettin' loooaded with {{f.multi}} {{f.name}}.</div>
         <div class="card-footer text-right">
           <i class="icon ion-chatbubbles positive"></i> {{f.comments}}
-             <div class="pull-left" ng-if="f.datediff >= -1">
+          <div class="pull-left" ng-if="f.datediff >= -1">
             <i class="icon ion-clock"></i> <span>{{f.date | amTimeAgo}}</span> 
           </div>
           <div class="pull-left" ng-if="f.datediff < -1">

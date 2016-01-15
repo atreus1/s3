@@ -5,7 +5,10 @@
         <!-- <li class="item" ng-repeat="p in myPurchases"> -->
         <div class="card" ng-repeat="p in myPurchases">
           <div class="item item-text-wrap">
-            {{p.multi}}st {{p.name}} {{(p.price) * (p.multi)}}kr {{p.date}}
+            {{p.multi}}st {{p.name}} {{(p.price) * (p.multi)}}kr
+            <div class="pull-right">
+              <i class="icon ion-clock"></i> <span><small>{{p.date | amTimeAgo}}</small></span> 
+            </div>
           </div>                 
           <div class="card-footer text-right">
             <div class="pull-left" ng-if="f.datediff >= -1">
