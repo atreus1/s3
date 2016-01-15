@@ -1,10 +1,10 @@
-<ion-view view-title="Favoriter">
+<ion-view hide-nav-bar="false" view-title="Favoriter">
     <ion-content class="has-header has-tabs">
         <div class="list half">
             <div ng-controller="FavCtrl" ng-repeat="i in items" ng-if="$even" on-hold="onHold(i.item_id, count)" ng-init="count=0" class="card card-gallery item item-text-wrap">
-                <div class="ink dark-bg" on-tap="count = count + 1" style="background: url('{{i.image}}');">
+                <div class="ink dark-bg" on-tap="count = count + 1" style="background: url('{{i.image}}') fixed;">
                     <h2>{{i.name}}</h2>
-                    <h1><center ng-show="count"> {{count}}</center></h1>
+                    <h1 style="margin-top: -10px;"><center ng-show="count"> {{count}}</center></h1>
                 </div>
                 <div class="item tabs tabs-secondary tabs-icon-left">
                     <a class="tab-item stable-bg assertive">
@@ -19,9 +19,9 @@
         </div>
         <div class="list half">
             <div ng-controller="FavCtrl" ng-repeat="i in items" ng-if="$odd" on-hold="onHold(i.item_id, count)" ng-init="count=0" class="card card-gallery item item-text-wrap">
-                <div class="ink dark-bg" on-tap="count = count + 1" style="background: url('{{i.image}}');">
+                <div class="ink dark-bg" on-tap="count = count + 1" style="background: url('{{i.image}}') fixed;">
                     <h2>{{i.name}}</h2>
-                    <h1><center ng-show="count"> {{count}}</center></h1>
+                    <h1 style="margin-top: -10px;"><center ng-show="count"> {{count}}</center></h1>
                 </div>
                 <div class="item tabs tabs-secondary tabs-icon-left">
                     <a class="tab-item stable-bg assertive">

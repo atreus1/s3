@@ -1,17 +1,20 @@
 /* global angular, document, window */
 'use strict';
 
-angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ngCordova','ionic.service.core', 'ionic.service.push'])
+angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ionic.service.core', 'ionic.service.push'])
 
 .controller('AppCtrl', function($scope) {
 
 })
 
-.controller('LoginCtrl', function($scope, ionicMaterialInk, $ionicPopup, $state, DBService) {
-  // Check if user is already logged in
-  if(window.localStorage['email']) {
-    $state.go('tab.fav');
-  }
+.controller('LoginCtrl', function($scope, $ionicPopup, $state, DBService) {
+
+  $scope.$on('$ionicView.loaded', function() {
+    // Check if user is already logged in
+    if(window.localStorage['email']) {
+      $state.go('tab.fav');
+    }
+  });
 
   // Create javascript object to get user parameters
   $scope.user = {};
@@ -25,11 +28,11 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
         if (promise.data.user.block === "1") {
           $ionicPopup.alert({
             title : "Åtkomst nekad",
-            subTitle: "Du har tyvärr blivit blockerad att använda tjänsten"
+            subTitle: "Du har blivit blockerad att använda tjänsten"
           });
         } else {
           // Store user in cache
-          console.log(promise.data);
+          //console.log(promise.data);
           window.localStorage['user_id'] = promise.data.user.user_id;
           window.localStorage['email'] = $scope.user.email;
           window.localStorage['firstname'] = promise.data.user.firstname;
@@ -47,55 +50,95 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
 .controller('RegisterCtrl', function($scope, $state, $ionicPopup, DBService) {
   // Create javascript object to get user parameters
   $scope.user = {};
+  $scope.user.user_id = window.localStorage['user_id'];
+  $scope.user.firstname = window.localStorage['firstname'];
+  $scope.user.lastname = window.localStorage['lastname'];
 
   // Register user
   $scope.register = function() {
-    var firstname = $scope.user.firstname.charAt(0).toUpperCase() + $scope.user.firstname.slice(1);
-    var lastname = $scope.user.lastname.charAt(0).toUpperCase() + $scope.user.lastname.slice(1);
+    if ($scope.user.password !== $scope.user.repeat_password) {
+      $ionicPopup.alert({
+        title : "Fel",
+        subTitle: "Lösenorden matchar inte! Var god försök igen"
+      }).then(function(res) {
+        $scope.user.password = "";
+        $scope.user.repeat_password = "";
+      });
+    } else {
+      var sendData = {'tag':"register", 'user_id':window.localStorage['user_id'], 'email':$scope.user.email, 'password':$scope.user.password};
 
-    var sendData = {'tag':"register", 'user_id':$scope.user.user_id, 'email':$scope.user.email, 'password':$scope.user.password, 'firstname':firstname, 'lastname':lastname};
+      DBService.sendToDB(sendData, true).then(function(promise) {
+        if (promise.data.success === 1) {
 
-    DBService.sendToDB(sendData, true).then(function(promise) {
-      if (promise.data.success === 1) {
-        // Store user in cache
-        window.localStorage['user_id'] = $scope.user.user_id;
-        window.localStorage['email'] = $scope.user.email;
-        window.localStorage['firstname'] = firstname;
-        window.localStorage['lastname'] = lastname;
-        window.localStorage['debt'] = 0;
+          window.localStorage['email'] = $scope.user.email;
+          window.localStorage['debt'] = 0;
 
-        // Display welcome message
-        $ionicPopup.alert({
-          title : "Registering klar!",
-          subTitle: "Välkommen "+firstname+" "+lastname+"!"
-        }).then(function(res) {
-          $state.go('tab.fav');
-        });
-      }
-    });
+          $ionicPopup.alert({
+            title : "Registering klar!",
+            subTitle: "Välkommen "+window.localStorage['firstname']+" "+window.localStorage['lastname']+"!"
+          }).then(function(res) {
+            $state.go('tab.feed');
+          });
+        }
+      });
+    }
   }
 })
 
-.controller('FriendsCtrl', function($scope, ionicMaterialInk, ionicMaterialMotion) {
+.controller('IDCtrl', function($scope, $state, $ionicPopup, DBService) {
+  $scope.user = {};
 
-    // Set Motion
-    ionicMaterialMotion.fadeSlideInRight();
+  $scope.checkID = function() {
+    var isOK = false;
+    var id = $scope.user.user_id;
 
-    // Set Ink
-    ionicMaterialInk.displayEffect();
+    if (id.length === 10) {
+      isOK = true;
+    } else if (id.length === 12) {
+      id = id.substring(2, 12);
+      isOK = true;
+    } else {
+      $ionicPopup.alert({
+        title : "Ogiltigt personnummer",
+        subTitle: "Vänligen ange personnummer på formen 123456XXXX"
+      }).then(function(res) {
+        $scope.user.user_id = "";
+      });
+    }
+
+    if (isOK) {
+      var sendData = {'tag':"isUserExisting", 'user_id':id};
+      DBService.sendToDB(sendData, true).then(function(promise) {
+        if (promise.data.success === 1) {
+          // Store user in cache
+          console.log("user_id exists in db");
+          console.log(promise.data);
+
+          if (promise.data.user.email === "") {
+            // user is new, should enter pw and email on new page
+            window.localStorage['user_id'] = id;
+            window.localStorage['firstname'] = promise.data.user.firstname.charAt(0).toUpperCase() + promise.data.user.firstname.slice(1);
+            window.localStorage['lastname'] = promise.data.user.lastname.charAt(0).toUpperCase() + promise.data.user.lastname.slice(1);
+
+            $state.go('register');
+          } else {
+            $ionicPopup.alert({
+              title : "Användare redan registrerad!",
+              subTitle: "Ditt personnummer finns redan med i systemet. Logga in med din email och ditt lösenord!"
+            }).then(function(res) {
+              $state.go('login');
+            });
+          }
+        }
+      });
+    }
+  }
 })
 
 .controller('ProfileCtrl', function($scope, $state, ionicMaterialMotion, ionicMaterialInk, DBService) {
 
-    $scope.logout = function() {
-      window.localStorage['email'] = "";
-      window.localStorage['firstname'] = "";
-      window.localStorage['lastname'] = "";
-      $state.go('login');
-    }
-
      $scope.doRefresh = function() {
-        var sendData = {'tag':'getProfile', 'user_id': '1'};
+        var sendData = {'tag':'getProfile', 'user_id': window.localStorage['user_id']};
             DBService.sendToDB(sendData, false).then(function(promise) {
               if (promise.data.success === 1) {
                 $scope.profile = promise.data.profile; 
@@ -149,47 +192,73 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
 })
 
 .controller('FeedCtrl', function($scope, ionicMaterialMotion, ionicMaterialInk, DBService) {
-
-    function getColor() {
-        var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
-        color = color[Math.floor(Math.random()*color.length)];
-        return "../img/" + color;
-    }
+  function getColor() {
+    var color = ['pink', 'green', 'blue', 'purple'];
+    color = color[Math.floor(Math.random()*color.length)];
+    return color;
+  }
       
-    var sendData = {'tag':'getFeed'};
-    $scope.doRefresh = function() {
-        DBService.sendToDB(sendData, false).then(function(promise) {
-          if (promise.data.success === 1) {
-             $scope.feed = promise.data.feed;
-             angular.forEach($scope.feed, function(c) {
-                c.date = new Date(c.date*1000);
-                c.datediff = moment(c.date).diff(moment(new Date), 'days');
-                if (!c.image)
-                    c.image = getColor();
-            }); 
+  var sendData = {'tag':'getFeed'};
+  $scope.doRefresh = function() {
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        $scope.feed = promise.data.feed;
+        console.log($scope.feed);
+        angular.forEach($scope.feed, function(c) {
+          c.date = new Date(c.date*1000);
+          c.datediff = moment(c.date).diff(moment(new Date), 'days');
+          if(c.comments > 0)
+            c.multi = c.multi-(c.comments-1);
+          if (!c.image) {
+            c.image = getColor();
           }
-        }).finally(function() {
-          // Stop the ion-refresher from spinning
-          $scope.$broadcast('scroll.refreshComplete');
-        });
-      };
+        }); 
+      }
+    }).finally(function() {
+      // Stop the ion-refresher from spinning
+      $scope.$broadcast('scroll.refreshComplete');
+    });
+  };
 
-        // Update feed when user enters scene
-        $scope.$on('$ionicView.loaded', function(){
-            $scope.doRefresh();
-        });
-
-    ionicMaterialMotion.blinds();
-
-    // // Activate ink for controller
-    // ionicMaterialInk.displayEffect();
-    
-
+  // Update feed when user enters scene
+  $scope.$on('$ionicView.loaded', function(){
+      $scope.doRefresh();
+  });
+  //ionicMaterialMotion.blinds();
 })
 
-.controller('CommentsCtrl', function($scope, $stateParams, DBService) {
-  $scope.hello = "Hellluuuuu";
+.controller('ViewCommentsCtrl', function($scope, $stateParams, DBService) {
   $scope.event_id = $stateParams.event_id;
+  $scope.firstname = $stateParams.tmp[0];
+  $scope.lastname = $stateParams.tmp[1];
+  $scope.item = $stateParams.tmp[2];
+  $scope.event = {};
+  $scope.comment = {};
+
+  $scope.doRefresh = function() {
+    var sendData = {'tag':"getComments", 'id':$stateParams.event_id};
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        console.log(promise.data.event);
+        $scope.event = promise.data.event;
+      }
+    });
+  }
+
+  $scope.addComment = function() {
+    var sendData = {'tag':"addComment", 'user_id':window.localStorage['user_id'], 'event_id':$scope.event_id, 'comment':$scope.comment.text};
+    DBService.sendToDB(sendData, true).then(function(promise) {
+      if (promise.data.success === 1) {
+        $scope.doRefresh();
+        $scope.comment.text ="";
+      }
+    });
+  }
+
+  $scope.$on('$ionicView.loaded', function(){
+      $scope.doRefresh();
+  });
+
 })
 
 .controller('FavCtrl', function($scope, $ionicPlatform, ionicMaterialMotion, DBService) { //, $cordovaVibration) {
@@ -197,10 +266,9 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     $scope.taps = 0;
 
     $scope.onHold = function(item, count) {   
-        if (!count) {
+        if (!count) 
             count = 1;
-        }
-        var sendData = {'tag':'purchaseItem', 'user_id': '1', 'item_id':item, 'count':count};
+        var sendData = {'tag':'purchaseItem', 'user_id': window.localStorage['user_id'], 'item_id':item, 'count':count};
         DBService.sendToDB(sendData, false).then(function(promise) {
             if (promise.data.success === 1) {
                 if (window.cordova) {
@@ -218,15 +286,16 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     function getColor() {
         var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
         color = color[Math.floor(Math.random()*color.length)];
-        return "../img/" + color;
+        return "/img/" + color;
     }
 
-    var sendData = {'tag':'getMostBuyedItem', 'user_id':'1'};
+    var sendData = {'tag':'getMostBuyedItem', 'user_id':window.localStorage['user_id']};
 
     $scope.doRefresh = function() {
         DBService.sendToDB(sendData, false).then(function(promise) {
           if (promise.data.success === 1) {
              $scope.items = promise.data.items;
+             console.log($scope.items);
              angular.forEach($scope.items, function(c) {
                     if (!c.image)
                     c.image = getColor();
@@ -288,5 +357,91 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ng
     });        
   } else {
     $scope.infoText = "Denna funktion fungerar ej i webbläsaren.";
+  }
+})
+
+.controller('SettingsCtrl', function($scope, $state) {
+  $scope.hello = "Tjenna";
+
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $scope.firstname = window.localStorage['firstname'];
+    $scope.lastname = window.localStorage['lastname'];
+    $scope.email = window.localStorage['email'];
+  });
+
+  $scope.logout = function() {
+    window.localStorage['user_id'] = "";
+    window.localStorage['email'] = "";
+    window.localStorage['firstname'] = "";
+    window.localStorage['lastname'] = "";
+    window.localStorage['debt'] = "";
+    $state.go('login');
+  }  
+})
+
+.controller('PasswordCtrl', function($scope, $ionicPopup, $ionicHistory, DBService) {
+  $scope.user = {};
+
+  $scope.updatePassword = function() {
+    var sendData = {'tag':"login", 'email':window.localStorage['email'], 'password':$scope.user.password};
+
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        // console.log("old password is correct");
+        var sendData = {'tag':"updatePassword", 'email':window.localStorage['email'], 'password':$scope.user.new_password};
+        DBService.sendToDB(sendData, true).then(function(promise) {
+          if (promise.data.success === 1) {
+            // console.log("new password is stored");
+            $ionicPopup.alert({
+              title : "Klart!",
+              subTitle: "Ditt lösenord är nu bytt"
+            }).then(function(res) {
+              $ionicHistory.goBack();
+            });                            
+          }
+        });
+      } else {
+        $ionicPopup.alert({
+          title : "Fel lösenord!",
+          subTitle: "Det gamla lösenordet stämmer inte"
+        }).then(function(res) {
+          $scope.user.password = "";
+        });          
+      }
+    });
+  }
+})
+
+.controller('EmailCtrl', function($scope, $ionicPopup, $ionicHistory, DBService) {
+  $scope.user = {};
+
+  $scope.updateEmail = function() {
+    var sendData = {'tag':"login", 'email':window.localStorage['email'], 'password':$scope.user.password};
+
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        // console.log("old password is correct");
+        var sendData = {'tag':"updateEmail", 'email':$scope.user.new_email, 'old_email':window.localStorage['email']};
+        DBService.sendToDB(sendData, true).then(function(promise) {
+          if (promise.data.success === 1) {
+            // console.log("new password is stored");
+            window.localStorage['email'] = $scope.user.new_email;
+            $ionicPopup.alert({
+              title : "Klart!",
+              subTitle: "Ditt lösenord är nu bytt"
+            }).then(function(res) {
+              $ionicHistory.goBack();
+            });                            
+          }
+        });
+      } else {
+        $ionicPopup.alert({
+          title : "Fel lösenord!",
+          subTitle: "Ange ditt lösenord för att gå vidare"
+        }).then(function(res) {
+          $scope.user.password = "";
+        });          
+      }
+    });    
   }
 });

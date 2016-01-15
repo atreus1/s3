@@ -1,4 +1,4 @@
-<ion-view view-title="Favoriter">
+<ion-view hide-nav-bar="false" view-title="Favoriter">
     <ion-content class="has-header has-tabs">
         <div class="list half">
             <div ng-controller="FavCtrl" ng-repeat="i in items" ng-if="$even" on-hold="onHold(i.item_id, count)" ng-init="count=0" class="card card-gallery item item-text-wrap">

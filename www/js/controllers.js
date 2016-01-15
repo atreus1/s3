@@ -32,7 +32,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
           });
         } else {
           // Store user in cache
-          console.log(promise.data);
+          //console.log(promise.data);
           window.localStorage['user_id'] = promise.data.user.user_id;
           window.localStorage['email'] = $scope.user.email;
           window.localStorage['firstname'] = promise.data.user.firstname;
@@ -135,23 +135,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
   }
 })
 
-.controller('FriendsCtrl', function($scope, ionicMaterialInk, ionicMaterialMotion) {
-
-    // Set Motion
-    ionicMaterialMotion.fadeSlideInRight();
-
-    // Set Ink
-    ionicMaterialInk.displayEffect();
-})
-
 .controller('ProfileCtrl', function($scope, $state, ionicMaterialMotion, ionicMaterialInk, DBService) {
-
-    $scope.logout = function() {
-      window.localStorage['email'] = "";
-      window.localStorage['firstname'] = "";
-      window.localStorage['lastname'] = "";
-      $state.go('login');
-    }
 
      $scope.doRefresh = function() {
         var sendData = {'tag':'getProfile', 'user_id': window.localStorage['user_id']};
@@ -373,5 +357,91 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
     });        
   } else {
     $scope.infoText = "Denna funktion fungerar ej i webbläsaren.";
+  }
+})
+
+.controller('SettingsCtrl', function($scope, $state) {
+  $scope.hello = "Tjenna";
+
+  $scope.$on('$ionicView.beforeEnter', function() {
+    $scope.firstname = window.localStorage['firstname'];
+    $scope.lastname = window.localStorage['lastname'];
+    $scope.email = window.localStorage['email'];
+  });
+
+  $scope.logout = function() {
+    window.localStorage['user_id'] = "";
+    window.localStorage['email'] = "";
+    window.localStorage['firstname'] = "";
+    window.localStorage['lastname'] = "";
+    window.localStorage['debt'] = "";
+    $state.go('login');
+  }  
+})
+
+.controller('PasswordCtrl', function($scope, $ionicPopup, $ionicHistory, DBService) {
+  $scope.user = {};
+
+  $scope.updatePassword = function() {
+    var sendData = {'tag':"login", 'email':window.localStorage['email'], 'password':$scope.user.password};
+
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        // console.log("old password is correct");
+        var sendData = {'tag':"updatePassword", 'email':window.localStorage['email'], 'password':$scope.user.new_password};
+        DBService.sendToDB(sendData, true).then(function(promise) {
+          if (promise.data.success === 1) {
+            // console.log("new password is stored");
+            $ionicPopup.alert({
+              title : "Klart!",
+              subTitle: "Ditt lösenord är nu bytt"
+            }).then(function(res) {
+              $ionicHistory.goBack();
+            });                            
+          }
+        });
+      } else {
+        $ionicPopup.alert({
+          title : "Fel lösenord!",
+          subTitle: "Det gamla lösenordet stämmer inte"
+        }).then(function(res) {
+          $scope.user.password = "";
+        });          
+      }
+    });
+  }
+})
+
+.controller('EmailCtrl', function($scope, $ionicPopup, $ionicHistory, DBService) {
+  $scope.user = {};
+
+  $scope.updateEmail = function() {
+    var sendData = {'tag':"login", 'email':window.localStorage['email'], 'password':$scope.user.password};
+
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        // console.log("old password is correct");
+        var sendData = {'tag':"updateEmail", 'email':$scope.user.new_email, 'old_email':window.localStorage['email']};
+        DBService.sendToDB(sendData, true).then(function(promise) {
+          if (promise.data.success === 1) {
+            // console.log("new password is stored");
+            window.localStorage['email'] = $scope.user.new_email;
+            $ionicPopup.alert({
+              title : "Klart!",
+              subTitle: "Ditt lösenord är nu bytt"
+            }).then(function(res) {
+              $ionicHistory.goBack();
+            });                            
+          }
+        });
+      } else {
+        $ionicPopup.alert({
+          title : "Fel lösenord!",
+          subTitle: "Ange ditt lösenord för att gå vidare"
+        }).then(function(res) {
+          $scope.user.password = "";
+        });          
+      }
+    });    
   }
 });

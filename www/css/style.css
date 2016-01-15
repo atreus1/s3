@@ -29,6 +29,7 @@ p {
 
 .inputField {
   background-color: rgba(40,40,40, 0.75);
+  margin-top: 10px;
 }
 
 .login-container {
