@@ -166,6 +166,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ngCordova','ionic.se
       }
     }
   })
+  .state('tab.purchases', {
+    url: '/settings/purchases',
+    views: {
+      'tab-settings': {
+        templateUrl: 'templates/settings-purchases.html',
+        controller: 'PurchasesCtrl'
+      }
+    }
+  })
   .state('tab.email', {
     url: '/settings/email',
     views: {
