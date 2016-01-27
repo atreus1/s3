@@ -1,5 +1,15 @@
 <ion-view view-title="Profil">
   <ion-content>
-    <nvd3 options="options" data="profile"></nvd3>    
+    <div class="card" ng-show="chartPie">
+      <div class="item item-text-wrap" style="padding-bottom:0px;padding-top:0px">
+        <highchart config="chartPie" class="Chartcenter"></highchart>
+      </div>
+    </div>
   </ion-content>
 </ion-view>
+
+<!-- <ion-view view-title="Profil">
+<ion-content>
+<nvd3 options="options" data="profile"></nvd3>    
+</ion-content>
+</ion-view> -->

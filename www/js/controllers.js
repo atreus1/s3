@@ -135,60 +135,126 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
   }
 })
 
-.controller('ProfileCtrl', function($scope, $state, ionicMaterialMotion, ionicMaterialInk, DBService) {
+.controller('ProfileCtrl', function($scope, DBService) {
+  $scope.chartPie = {
+    options: {
+      chart: {
+        type: 'pie'
+      },
+      colors: [
+        '#ED1176',
+        '#E24E1B',
+        '#AF4319',
+        '#FF773D',
+        '#D0E37F',
+        '#2E86AB',
+        '#A23B72',
+        '#086788',
+        '#07A0C3',
+        '#92DCE5',
+        '#54494B',
+        '#F1F7ED',
+        '#7FB800'
+      ],
+    },
+    series: [{
+      data: [
+        // ['Download', 100],
+        // ['Upload', 500]
+      ],
+      name: ' ',
+      dataLabels: {
+        rotation: 0,
+        enabled: false,
+        format: ''
+      }
+    }],
+    title: {
+      text: 'Mina köp'
+    },
+    credits: {
+      enabled: false
+    },
+    loading: false
+  }
 
-     $scope.doRefresh = function() {
-        var sendData = {'tag':'getProfile', 'user_id': window.localStorage['user_id']};
-            DBService.sendToDB(sendData, false).then(function(promise) {
-              if (promise.data.success === 1) {
-                $scope.profile = promise.data.profile; 
-              }
+  $scope.doRefresh = function() {
+    var sendData = {'tag':'getProfile', 'user_id': window.localStorage['user_id']};
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        $scope.profile = promise.data.profile; 
+        console.log($scope.profile);
 
-            $scope.options = {
-            chart: {
-                type: 'pieChart',
-                height: 500,
-                margin: {
-                        top: -100,
-                        right: 0,
-                        bottom: 0,
-                        left: 0
-                },
-                donut: true,
-                title: $scope.profile[0].debt,
-                titleOffset: -30,
-                x: function(d){return d.name;},
-                y: function(d){return d.sum;},
-                showLabels: false,             
-                pie: {
-                    startAngle: function(d) { return d.startAngle/2 -Math.PI/2 },
-                    endAngle: function(d) { return d.endAngle/2 -Math.PI/2 }
-                },
-                duration: 500,
-                legend: {
-                    margin: {
-                        top: 8,
-                        right: 100,
-                        bottom: 0,
-                        left: 0
-                    }
-                }
-            }
-        };
+        var tempArray = [];
+
+        for (var i = 0; i < $scope.profile.length; i++) {
+          // Create tuples
+          tempArray[i] = [$scope.profile[i].name, parseInt($scope.profile[i].sum)];
+        }
+
+        console.log(tempArray);
+        $scope.chartPie.series[0].data = tempArray;
+        $scope.chartPie.series[0].name = $scope.profile[0].firstname + " " + $scope.profile[0].lastname;
+      }
+    });
+  }  
+
+  $scope.$on('$ionicView.loaded', function(){
+    $scope.doRefresh();
+  });
+
+ //     $scope.doRefresh = function() {
+ //        var sendData = {'tag':'getProfile', 'user_id': window.localStorage['user_id']};
+ //            DBService.sendToDB(sendData, false).then(function(promise) {
+ //              if (promise.data.success === 1) {
+ //                $scope.profile = promise.data.profile; 
+ //              }
+
+ //            $scope.options = {
+ //            chart: {
+ //                type: 'pieChart',
+ //                height: 500,
+ //                margin: {
+ //                        top: -100,
+ //                        right: 0,
+ //                        bottom: 0,
+ //                        left: 0
+ //                },
+ //                donut: true,
+ //                title: $scope.profile[0].debt,
+ //                titleOffset: -30,
+ //                x: function(d){return d.name;},
+ //                y: function(d){return d.sum;},
+ //                showLabels: false,             
+ //                pie: {
+ //                    startAngle: function(d) { return d.startAngle/2 -Math.PI/2 },
+ //                    endAngle: function(d) { return d.endAngle/2 -Math.PI/2 }
+ //                },
+ //                duration: 500,
+ //                legend: {
+ //                    margin: {
+ //                        top: 8,
+ //                        right: 100,
+ //                        bottom: 0,
+ //                        left: 0
+ //                    }
+ //                }
+ //            }
+ //        };
 
 
-            });
-        };
+ //            });
+ //        };
 
-        $scope.$on('$ionicView.loaded', function(){
-            $scope.doRefresh();
-        });
+ //        $scope.$on('$ionicView.loaded', function(){
+ //            $scope.doRefresh();
+ //        });
 
- // Set Motion
-    ionicMaterialMotion.blinds();
+ // // Set Motion
+ //    ionicMaterialMotion.blinds();
 
-    // Set Ink
-    ionicMaterialInk.displayEffect();
+ //    // Set Ink
+ //    ionicMaterialInk.displayEffect();
 })
 
 .controller('FeedCtrl', function($scope, ionicMaterialMotion, ionicMaterialInk, DBService) {
