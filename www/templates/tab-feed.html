@@ -2,7 +2,7 @@
   <ion-content class="has-header has-tabs">
   <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher> 
     <div ng-controller="FeedCtrl" ng-repeat="f in feed" class="card">
-      <a class="item item-avatar item-text-wrap" href="#/tab/feed/{{f.id}}?tmp={{f.firstname}}&tmp={{f.lastname}}&tmp={{f.name}}">
+      <a class="item item-avatar item-text-wrap" href="#/tab/feed/{{f.id}}?tmp={{f.firstname}}&tmp={{f.multi}}&tmp={{f.name}}">
         <span class="avatar" style="background-image: url('{{f.image}}');"></span>
         <span ng-if="f.image == 'pink' || f.image == 'blue' || f.image == 'green' || f.image == 'purple'" class="avatar" ng-class="f.image"></span>
         <div ng-if="f.multi == 1"><strong>{{f.firstname}} {{f.lastname}}</strong> buys a {{f.name}}.</div>
@@ -13,7 +13,7 @@
             <i class="icon ion-clock"></i> <span>{{f.date | amTimeAgo}}</span> 
           </div>
           <div class="pull-left" ng-if="f.datediff < -1">
-            <i class="icon ion-clock"></i> <span>{{f.date | amTimeAgo}} ({{f.date | amCalendar | amDateFormat :'YYYY/MM/DD'}})</span>
+            <i class="icon ion-clock"></i> <span>{{f.date | amTimeAgo}} {{f.date | amCalendar | amDateFormat :'YYYY/MM/DD'}}</span>
           </div>
         </div>
       </a>

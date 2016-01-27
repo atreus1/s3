@@ -228,12 +228,19 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
 })
 
 .controller('ViewCommentsCtrl', function($scope, $stateParams, DBService) {
-  $scope.event_id = $stateParams.event_id;
-  $scope.firstname = $stateParams.tmp[0];
-  $scope.lastname = $stateParams.tmp[1];
-  $scope.item = $stateParams.tmp[2];
+  var firstname = $stateParams.tmp[0];
+  var amount = $stateParams.tmp[1]; 
+  var item = $stateParams.tmp[2];
   $scope.event = {};
   $scope.comment = {};
+
+  //console.log("amount "+typeof($scope.amount));
+
+  if (amount === "1") {
+    $scope.title = firstname+ " buys a "+item;
+  } else {
+    $scope.title = firstname+ " buys "+amount+" "+item;
+  }
 
   $scope.doRefresh = function() {
     var sendData = {'tag':"getComments", 'id':$stateParams.event_id};
@@ -246,7 +253,7 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
   }
 
   $scope.addComment = function() {
-    var sendData = {'tag':"addComment", 'user_id':window.localStorage['user_id'], 'event_id':$scope.event_id, 'comment':$scope.comment.text};
+    var sendData = {'tag':"addComment", 'user_id':window.localStorage['user_id'], 'event_id':$stateParams.event_id, 'comment':$scope.comment.text};
     DBService.sendToDB(sendData, true).then(function(promise) {
       if (promise.data.success === 1) {
         $scope.doRefresh();
