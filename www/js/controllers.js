@@ -388,18 +388,33 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
 })
 
 .controller('PurchasesCtrl', function($scope, $ionicPopup, DBService) {
-  $scope.$on('$ionicView.beforeEnter', function() {
+  $scope.deleteItem = function(purchase_id, count, name, price) {
+    var confirmPopup = $ionicPopup.confirm({
+     title: 'faggot drick då ..',
+     template: 'ångra köpet av ' +  count + 'st ' + name
+   });
+
+   confirmPopup.then(function(res) {
+     if(res) {
+          console.log("delete event "+ purchase_id + " " + count);
+          var sendData = {'tag':"deletePurchase", 'item_id':purchase_id, 'count':count, 'price':price, 'user_id': window.localStorage['user_id']};
+          DBService.sendToDB(sendData, false).then(function(promise) {
+            if (promise.data.success === 1) {
+              console.log(promise.data);
+            }
+          }); 
+          // update list again:
+
+     } 
+   });
+  //$scope.getMyPurchases();
+ };
+
+   $scope.$on('$ionicView.loaded', function() {
     $scope.getMyPurchases();
   });
 
-  $scope.deleteItem = function(purchase_id) {
-    console.log("delete event "+purchase_id);
-
-    // update list again:
-    $scope.getMyPurchases();
-  }
-
-  $scope.getMyPurchases = function() {
+    $scope.getMyPurchases = function() {
     var sendData = {'tag':"getMyPurchases", 'user_id':window.localStorage['user_id']};
 
     DBService.sendToDB(sendData, false).then(function(promise) {
