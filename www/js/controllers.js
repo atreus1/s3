@@ -392,6 +392,13 @@ angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'io
     $scope.getMyPurchases();
   });
 
+  $scope.deleteItem = function(purchase_id) {
+    console.log("delete event "+purchase_id);
+
+    // update list again:
+    $scope.getMyPurchases();
+  }
+
   $scope.getMyPurchases = function() {
     var sendData = {'tag':"getMyPurchases", 'user_id':window.localStorage['user_id']};
 
