@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','ngCordova','highcharts-ng','ionic.service.core', 'ionic.service.push', 'starter.services', 'ionic-material', 'ionMdInput'])
+angular.module('starter', ['ionic','starter.controllers','starter.services','ngCordova','highcharts-ng','ionic-material'])
 
-.run(function($ionicPlatform, $rootScope, $ionicUser, $ionicPush) {
+.run(function($ionicPlatform, $rootScope) {
 
   $ionicPlatform.ready(function() {
        // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard

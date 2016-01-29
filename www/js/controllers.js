@@ -1,7 +1,7 @@
 /* global angular, document, window */
 'use strict';
 
-angular.module('starter.controllers', ['angularMoment', 'ngCordova', 'nvd3', 'ionic.service.core', 'ionic.service.push'])
+angular.module('starter.controllers', ['angularMoment', 'ngCordova'])
 
 .controller('AppCtrl', function($scope) {
 
