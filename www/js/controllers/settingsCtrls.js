@@ -21,46 +21,44 @@ app.controller('SettingsCtrl', function($scope, $state) {
 
 app.controller('PurchasesCtrl', function($scope, $ionicPopup, DBService) {
   $scope.deleteItem = function(purchase_id, count, name, price) {
-    var confirmPopup = $ionicPopup.confirm({
-     title: 'faggot drick då ..',
-     template: 'ångra köpet av ' +  count + 'st ' + name
-   });
+    $ionicPopup.confirm({
+      title: 'Ångra köp',
+      template: '<center>Ångra köpet av '+count+'st '+name+'?</center>',
+      cancelText: 'Nej',
+      okText: 'Ja'
+    }).then(function(res) {
+      if(res) {
+        console.log("delete event "+ purchase_id + " " + count);
+        var sendData = {'tag':"deletePurchase", 'item_id':purchase_id, 'count':count, 'price':price, 'user_id': window.localStorage['user_id']};
+        DBService.sendToDB(sendData, false).then(function(promise) {
+          if (promise.data.success === 1) {
+            // console.log(promise.data);
+            $scope.getMyPurchases();
+          }
+        });
+      }
+    });
+  }
 
-   confirmPopup.then(function(res) {
-     if(res) {
-          console.log("delete event "+ purchase_id + " " + count);
-          var sendData = {'tag':"deletePurchase", 'item_id':purchase_id, 'count':count, 'price':price, 'user_id': window.localStorage['user_id']};
-          DBService.sendToDB(sendData, false).then(function(promise) {
-            if (promise.data.success === 1) {
-              console.log(promise.data);
-            }
-          }); 
-          // update list again:
-
-     } 
-   });
-  //$scope.getMyPurchases();
- };
-
-   $scope.$on('$ionicView.loaded', function() {
+  $scope.$on('$ionicView.loaded', function() {
     $scope.getMyPurchases();
   });
 
-    $scope.getMyPurchases = function() {
-    var sendData = {'tag':"getMyPurchases", 'user_id':window.localStorage['user_id']};
+  $scope.getMyPurchases = function() {
+  var sendData = {'tag':"getMyPurchases", 'user_id':window.localStorage['user_id']};
 
-    DBService.sendToDB(sendData, false).then(function(promise) {
-      if (promise.data.success === 1) {
-        console.log(promise.data);
-        $scope.myPurchases = promise.data.purchases;
-        angular.forEach($scope.myPurchases, function(c) {
-          c.date = new Date(c.date*1000);
-          c.datediff = moment(c.date).diff(moment(new Date), 'days');
-        });
-      } else {
-        $scope.infoText = "Kunde inte hitta några köp";
-      }
-    });    
+  DBService.sendToDB(sendData, false).then(function(promise) {
+    if (promise.data.success === 1) {
+      console.log(promise.data);
+      $scope.myPurchases = promise.data.purchases;
+      angular.forEach($scope.myPurchases, function(c) {
+        c.date = new Date(c.date*1000);
+        c.datediff = moment(c.date).diff(moment(new Date), 'days');
+      });
+    } else {
+      $scope.infoText = "Kunde inte hitta några köp";
+    }
+  });    
   }
 });
 
@@ -80,7 +78,7 @@ app.controller('EmailCtrl', function($scope, $ionicPopup, $ionicHistory, DBServi
             window.localStorage['email'] = $scope.user.new_email;
             $ionicPopup.alert({
               title : "Klart!",
-              subTitle: "Ditt email är nu bytt"
+              subTitle: "Din email är nu bytt"
             }).then(function(res) {
               $ionicHistory.goBack();
             });                            

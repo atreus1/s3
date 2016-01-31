@@ -46,7 +46,7 @@ app.controller('ProfileCtrl', function($scope, DBService) {
       data: [0,0,0,0,0,0,0]
     }],    
     title: {
-      text: 'Antal köp den här veckan'
+      text: 'Mina antal köp den här veckan'
     },
     credits: {
       enabled: false
@@ -91,7 +91,7 @@ app.controller('ProfileCtrl', function($scope, DBService) {
       data: [0,0,0,0,0,0,0]
     }],    
     title: {
-      text: 'Kostnad den här veckan'
+      text: 'Min kostnad den här veckan'
     },
     credits: {
       enabled: false
@@ -129,17 +129,11 @@ app.controller('ProfileCtrl', function($scope, DBService) {
       },
       colors: [
         '#ED1176',
-        '#E24E1B',
-        '#AF4319',
+        '#87E752',
         '#FF773D',
         '#D0E37F',
-        '#2E86AB',
-        '#A23B72',
-        '#086788',
         '#07A0C3',
         '#92DCE5',
-        '#54494B',
-        '#F1F7ED',
         '#7FB800'
       ],
     },
@@ -160,8 +154,6 @@ app.controller('ProfileCtrl', function($scope, DBService) {
       },
       colors: [
         '#ED1176',
-        '#E24E1B',
-        '#AF4319',
         '#FF773D',
         '#D0E37F',
         '#2E86AB',
@@ -182,7 +174,7 @@ app.controller('ProfileCtrl', function($scope, DBService) {
       name: ' ',
       dataLabels: {
         rotation: 0,
-        enabled: false,
+        enabled: true,
         format: ''
       }
     }],
@@ -205,14 +197,14 @@ app.controller('ProfileCtrl', function($scope, DBService) {
       return ~~((date - date2 + serial(weekday(date2) + 5))/ serial(7));
   }
 
-  // console.log($scope.week(new Date()));
+  //$scope.lobScore = [];  
 
   $scope.doRefresh = function() {
     var sendData = {'tag':'getLobareWeekData', 'week':$scope.week(new Date())};
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
         $scope.lobare = promise.data.result; 
-        console.log($scope.lobare);
+        //console.log($scope.lobare);
 
         var keyArray = [];
         var objArray = {};
@@ -228,14 +220,21 @@ app.controller('ProfileCtrl', function($scope, DBService) {
 
         for (var i = 0; i < $scope.lobare.length; i++) {
           // Go through the whole list from the db, and add the debt to the responding day (index)
-          // use the first name as key to the whole week array, e.g. "Jimmy"; [0,0,0,0,0,0,0]
-          objArray[$scope.lobare[i].firstname][parseInt($scope.lobare[i].day)-1] = parseInt($scope.lobare[i].debt);
+          // use the first name as key to the whole week array, e.g. {"Jimmy": [0,0,0,0,0,0,0]}
+          objArray[$scope.lobare[i].firstname][parseInt($scope.lobare[i].day)] = parseInt($scope.lobare[i].debt);
         }
 
         for (var i = 0; i < keyArray.length; i++) {
           var length = $scope.chartLobare.series.length;
           $scope.chartLobare.series[length] = {data: objArray[keyArray[i]], name: keyArray[i]};
+
+          // var weekSum = 0;
+          // for (var j = 0; j < objArray[keyArray[i]].length; j++) {
+          //   weekSum += objArray[keyArray[i]][j];
+          // }
+          // $scope.lobScore[$scope.lobScore.length] = {name: keyArray[i], debt: weekSum};
         }
+        //console.log($scope.lobScore);
       }
     });
 
@@ -243,12 +242,12 @@ app.controller('ProfileCtrl', function($scope, DBService) {
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
         $scope.week = promise.data.days; 
-        // console.log($scope.week);
+        console.log($scope.week);
 
         var tempArray = [];
 
         for (var i = 0; i < $scope.week.length; i++) {
-          var index = parseInt($scope.week[i].day)-1;
+          var index = parseInt($scope.week[i].day);
           var amountValue = parseInt($scope.week[i].amount);
           var debtValue = parseInt($scope.week[i].debt);
 
@@ -281,57 +280,4 @@ app.controller('ProfileCtrl', function($scope, DBService) {
   $scope.$on('$ionicView.loaded', function(){
     $scope.doRefresh();
   });
-
- //     $scope.doRefresh = function() {
- //        var sendData = {'tag':'getProfile', 'user_id': window.localStorage['user_id']};
- //            DBService.sendToDB(sendData, false).then(function(promise) {
- //              if (promise.data.success === 1) {
- //                $scope.profile = promise.data.profile; 
- //              }
-
- //            $scope.options = {
- //            chart: {
- //                type: 'pieChart',
- //                height: 500,
- //                margin: {
- //                        top: -100,
- //                        right: 0,
- //                        bottom: 0,
- //                        left: 0
- //                },
- //                donut: true,
- //                title: $scope.profile[0].debt,
- //                titleOffset: -30,
- //                x: function(d){return d.name;},
- //                y: function(d){return d.sum;},
- //                showLabels: false,             
- //                pie: {
- //                    startAngle: function(d) { return d.startAngle/2 -Math.PI/2 },
- //                    endAngle: function(d) { return d.endAngle/2 -Math.PI/2 }
- //                },
- //                duration: 500,
- //                legend: {
- //                    margin: {
- //                        top: 8,
- //                        right: 100,
- //                        bottom: 0,
- //                        left: 0
- //                    }
- //                }
- //            }
- //        };
-
-
- //            });
- //        };
-
- //        $scope.$on('$ionicView.loaded', function(){
- //            $scope.doRefresh();
- //        });
-
- // // Set Motion
- //    ionicMaterialMotion.blinds();
-
- //    // Set Ink
- //    ionicMaterialInk.displayEffect();
 });
