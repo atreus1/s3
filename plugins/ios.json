@@ -12,6 +12,12 @@
         },
         "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "com.ionicframework.sample374926"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "nu.tolva.streckbase"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "nu.tolva.streckbase"
         }
     },
     "dependent_plugins": {}

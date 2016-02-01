@@ -6,7 +6,7 @@
         <input style="color: white;" type="search" ng-enter="doSearch()" placeholder="Sök" ng-model="query.text">
       </label>
     </div>
-    <div class="list condensed-space no-padding">
+    <div class="list  no-padding">
       <div class="card clear-bg in" ng-repeat="i in items" on-hold="onHold(i)">
         <a class="item dark-bg item-bg-image item-text-wrap specialCard" on-tap="onTap(i)" style="background: url('{{i.image}}') center no-repeat;">
           <h2>{{i.name}} {{i.price}}kr</h2>

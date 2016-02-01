@@ -12,6 +12,9 @@ app.directive('ngEnter', function() {
           scope.$eval(attrs.ngEnter);
         });
         event.preventDefault();
+        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+          cordova.plugins.Keyboard.close();
+        }        
       }
     });
   };
