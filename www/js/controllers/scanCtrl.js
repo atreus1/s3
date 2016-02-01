@@ -1,6 +1,6 @@
 var app = angular.module('starter.controllers');
 
-app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicHistory, $state, DBService, $cordovaVibration) {
+app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicHistory, $state, DBService, $cordovaVibration, $cordovaFlashlight) {
   $scope.buy = function(barcode) {
     var sendData = {'tag':'purchaseBarcodeItem', 'user_id':window.localStorage['user_id'], 'barcode':barcode};        
 
@@ -18,8 +18,16 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicHistory, $stat
     });
   }
 
-  if (window.cordova) {    
-    $ionicPlatform.ready(function() {
+  if (window.cordova) {
+    var avail;    
+    $ionicPlatform.ready(function() {      
+      $cordovaFlashlight.available().then(function(availability) {
+        avail = availability; // is available
+        $cordovaFlashlight.switchOn();
+      }, function () {
+        avail = false;
+      }); 
+
       cordova.plugins.barcodeScanner.scan(
         function (result) {
           if (result.cancelled) {
@@ -27,10 +35,16 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicHistory, $stat
           } else {
             $scope.buy(result.text);
           }
+          if (avail) {
+            $cordovaFlashlight.switchOff();
+          }          
         }, 
         function (error) {
           //alert("Scanning failed: " + error);
           console.log("Issue with barcode scanner within app");
+          if (avail) {
+            $cordovaFlashlight.switchOff();
+          }          
           $ionicHistory.goBack(-1);
         }
       );
