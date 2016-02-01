@@ -2,19 +2,21 @@
   <ion-content class="padding has-header has-tabs">
     <p ng-show="infoText">{{infoText}}</p>  
     <div class="list">
-      <div class="card" on-hold="deleteItem(p.id, p.multi, p.name, p.price)" ng-repeat="p in myPurchases">
-        <div class="item item-text-wrap">
-          {{p.multi}}st {{p.name}} {{(p.price) * (p.multi)}}kr
-          <div class="pull-right">
-            <i class="icon ion-clock"></i> <span><small>{{p.date | amTimeAgo}}</small></span> 
+      <div class="card" ng-repeat="p in myPurchases">
+        <div ng-if="p.hourdiff == 0" on-double-tap="deleteItem(p.id, p.multi, p.name, p.price)" on-hold="deleteItem(p.id, p.multi, p.name, p.price)">
+          <div class="item item-text-wrap">
+            {{p.multi}}st {{p.name}} {{(p.price) * (p.multi)}}kr
+            <div class="pull-right">
+              <i class="icon ion-clock"></i> <span><small>{{p.date | amTimeAgo}}</small></span>
+            </div>
           </div>
-        </div>                 
-        <div class="card-footer text-right">
-          <div class="pull-left" ng-if="f.datediff >= -1">
-            <i class="icon ion-clock"></i> <span>{{p.date | amTimeAgo}}</span> 
-          </div>
-          <div class="pull-left" ng-if="f.datediff < -1">
-            <i class="icon ion-clock"></i> <span>{{p.date | amTimeAgo}} ({{p.date | amCalendar | amDateFormat :'YYYY/MM/DD'}})</span>
+        </div>
+        <div ng-if="p.hourdiff >= 1" style="background-color: #DDDDDD;">
+          <div class="item item-text-wrap">
+            {{p.multi}}st {{p.name}} {{(p.price) * (p.multi)}}kr
+            <div class="pull-right">
+              <i class="icon ion-clock"></i> <span><small>{{p.date | amTimeAgo}}</small></span>
+            </div>
           </div>
         </div>
       </div>

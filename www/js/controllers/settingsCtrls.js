@@ -54,6 +54,7 @@ app.controller('PurchasesCtrl', function($scope, $ionicPopup, DBService) {
       angular.forEach($scope.myPurchases, function(c) {
         c.date = new Date(c.date*1000);
         c.datediff = moment(c.date).diff(moment(new Date), 'days');
+        c.hourdiff = Math.abs(moment(c.date).diff(moment(new Date), 'hours'));
       });
     } else {
       $scope.infoText = "Kunde inte hitta några köp";
