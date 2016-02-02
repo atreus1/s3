@@ -33,7 +33,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
 
   // $scope.onHold = function(item, name, count, price) {   
   $scope.onHold = function(i) {     
-    //console.log("item: "+i.item_id+" count: "+i.count+" price: "+i.price);
+    console.log("item: "+i.id+" count: "+i.count+" price: "+i.price);
 
     if (i.count > 0) {
       var totalPrice = i.count * parseInt(i.price);
@@ -45,13 +45,13 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
           okText: 'Ja'
         }).then(function(res) {
           if(res) {
-            $scope.buy(i.item_id, i.count);
+            $scope.buy(i.id, i.count);
           } else {
             i.count = 0;
           }
         });        
       } else {
-        $scope.buy(i.item_id, i.count);
+        $scope.buy(i.id, i.count);
       }
     }
   }
@@ -60,23 +60,65 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
     var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
     color = color[Math.floor(Math.random()*color.length)];
     return "/img/" + color;
-  }
-
-  var sendData = {'tag':'getMostBuyedItem', 'user_id':window.localStorage['user_id']};
+  }  
 
   $scope.doRefresh = function() {
+    // var sendData = {'tag':'getMostBuyedItem', 'user_id':window.localStorage['user_id']};
+    // DBService.sendToDB(sendData, false).then(function(promise) {
+    //   if (promise.data.success === 1) {
+    //     $scope.items = promise.data.items;
+    //     //console.log($scope.items);
+    //     angular.forEach($scope.items, function(c) {
+    //       if (!c.image) {
+    //         c.image = getColor();            
+    //       }
+    //       c.count = 0;
+    //     });
+    //   }
+    // });
+
+    var sendData = {'tag':'getAllItems', 'user_id':window.localStorage['user_id']};
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
-        $scope.items = promise.data.items;
-        //console.log($scope.items);
+        var data = promise.data.items;
+        console.log($scope.items);
+
+        var objArray = {};
+
+        // Overwrite product where I have bought stuff
+        for (var i = 0; i < data.length; i++) {
+          objArray[data[i].id] = data[i];
+        }
+
+        var itemsArray = [];
+        var index = 0;
+
+        // Make it to a normal array of objects
+        for (var key in objArray) {
+          if (objArray.hasOwnProperty(key)) {
+            itemsArray[index] = {id: objArray[key].id, amount: objArray[key].amount, name: objArray[key].name, price: objArray[key].price, image: objArray[key].image}
+            index++;
+          }
+        }
+
+        // console.log(itemsArray);
+
+        // Sort the array. (Angular sort did not work so I'm using this one instead)
+        itemsArray.sort(function(a, b) {
+          return parseFloat(b.amount) - parseFloat(a.amount);
+        });
+
+        // console.log(itemsArray);
+
+        $scope.items = itemsArray;
         angular.forEach($scope.items, function(c) {
           if (!c.image) {
             c.image = getColor();            
           }
           c.count = 0;
-        });
+        });        
       }
-    });
+    });    
   }
     // Update feed when user enters scene
   $scope.$on('$ionicView.loaded', function(){
