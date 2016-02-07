@@ -52,12 +52,14 @@ p {
     -moz-background-size: cover;
     background-size: cover;
 }
-.scan-bg {
-/*    background: url("../img/barcode_bg.png") no-repeat center center fixed; 
+
+.reset-container {
+    background: url("../img/alc2.jpg") no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
-    background-size: cover;*/
+    background-size: cover;
 }
+
 
 .center {
   -webkit-align-content: stretch;

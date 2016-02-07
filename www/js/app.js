@@ -93,7 +93,13 @@ angular.module('starter', ['ionic','starter.controllers','starter.services','ngC
     url: '/register',
     templateUrl: 'templates/register.html',
     controller: 'RegisterCtrl'
-  })  
+  })
+
+  .state('reset', {
+    url: '/reset',
+    templateUrl: 'templates/reset_password.html',
+    controller: 'ResetCtrl'
+  })
 
   .state('id', {
     url: '/id',

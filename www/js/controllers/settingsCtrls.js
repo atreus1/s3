@@ -1,13 +1,25 @@
 var app = angular.module('starter.controllers');
 
-app.controller('SettingsCtrl', function($scope, $state) {
+app.controller('SettingsCtrl', function($scope, $state, DBService) {
   $scope.hello = "Tjenna";
 
   $scope.$on('$ionicView.beforeEnter', function() {
+    $scope.getUserDebt();
+
     $scope.firstname = window.localStorage['firstname'];
     $scope.lastname = window.localStorage['lastname'];
     $scope.email = window.localStorage['email'];
   });
+
+  $scope.getUserDebt = function() {    
+    var sendData = {'tag':"getMyDebt", 'user_id':window.localStorage['user_id']};
+
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        $scope.debt = promise.data.debt +"kr";
+      }
+    });
+  }
 
   $scope.logout = function() {
     window.localStorage['user_id'] = "";

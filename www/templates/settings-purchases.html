@@ -1,6 +1,7 @@
 <ion-view title="Mina köp">
   <ion-content class="padding has-header has-tabs">
-    <p ng-show="infoText">{{infoText}}</p>  
+    <p ng-show="infoText">{{infoText}}</p>
+    <p ng-show="!infoText">Köp genomförda inom en timme går att ångra. Dubbelklicka på ett köp för att ångra.</p>
     <div class="list">
       <div class="card" ng-repeat="p in myPurchases">
         <div ng-if="p.hourdiff == 0" on-double-tap="deleteItem(p.id, p.multi, p.name, p.price)" on-hold="deleteItem(p.id, p.multi, p.name, p.price)">

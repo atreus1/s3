@@ -3,13 +3,13 @@
     <form class="list">
       <ion-list>
         <label class="item item-input inputField">
-          <input style="color: white;" type="email" placeholder="Ny email" ng-model="user.new_email">
+          <input style="color: white;" type="email" ng-enter placeholder="Ny email" ng-model="user.new_email">
         </label>        
         <label class="item item-input inputField">
-          <input style="color: white;" type="email" placeholder="Reptera email" ng-model="user.repeat_email">
+          <input style="color: white;" type="email" ng-enter placeholder="Reptera email" ng-model="user.repeat_email">
         </label>        
         <label class="item item-input inputField">
-          <input style="color: white;" type="password" placeholder="Lösenord" ng-model="user.password">
+          <input style="color: white;" type="password" ng-enter placeholder="Lösenord" ng-model="user.password">
         </label>
       </ion-list>
       <button class="button button-positive button-block ink" ng-disabled="user.new_email != user.repeat_email || !user.password" ng-click="updateEmail()">Spara</button>

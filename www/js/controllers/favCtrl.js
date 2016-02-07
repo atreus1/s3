@@ -1,14 +1,11 @@
 var app = angular.module('starter.controllers');
 
-app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, DBService, $cordovaVibration) { //, $cordovaVibration) {
+app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, DBService, $cordovaVibration) {
   $scope.items = {};
   $scope.taps = 0;
   $scope.query = {}
   var locked = false;
-
-  $scope.doSearch = function() {
-    console.log("Enter pressed: "+$scope.query.text);      
-  }
+  var allItems = {};
 
   $scope.onTap = function(i) {
     i.count += 1;
@@ -110,6 +107,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
 
         // console.log(itemsArray);
 
+        allItems = itemsArray;
         $scope.items = itemsArray;
         angular.forEach($scope.items, function(c) {
           if (!c.image) {
