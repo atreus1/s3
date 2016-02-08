@@ -1,8 +1,12 @@
 <ion-view view-title="Inställningar">
-  <ion-content class="padding has-header has-tabs">
+  <ion-content scroll="false" class="padding has-header has-tabs">
     <div class="list card">
-      <div class="item">
-        <h2 class="">{{firstname}} {{lastname}} <span style="float:right;">{{debt}}</span></h2>        
+      <div class="item" ng-if="debt > 0">
+        <h2 class="">{{firstname}} {{lastname}} <span class="assertive" style="float:right;">{{debt}}kr</span></h2>        
+        {{email}}
+      </div>    
+      <div class="item" ng-if="debt <= 0">
+        <h2 class="">{{firstname}} {{lastname}} <span class="balanced" style="float:right;">{{debt}}kr</span></h2>        
         {{email}}        
       </div>    
     </div>

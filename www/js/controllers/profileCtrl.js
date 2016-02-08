@@ -201,10 +201,11 @@ app.controller('ProfileCtrl', function($scope, DBService) {
 
   $scope.doRefresh = function() {
     var sendData = {'tag':'getLobareWeekData', 'week':$scope.week(new Date())};
+    console.log(sendData);
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
         $scope.lobare = promise.data.result; 
-        //console.log($scope.lobare);
+        console.log($scope.lobare);
 
         var keyArray = [];
         var objArray = {};

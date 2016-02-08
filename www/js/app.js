@@ -75,7 +75,7 @@ angular.module('starter', ['ionic','starter.controllers','starter.services','ngC
   
 
   // Turn off caching for demo simplicity's sake
-  $ionicConfigProvider.views.maxCache(0);
+  //$ionicConfigProvider.views.maxCache(0);
 
   // Turn off back button text
   $ionicConfigProvider.backButton.text('').previousTitleText(false);

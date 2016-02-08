@@ -1,8 +1,6 @@
 var app = angular.module('starter.controllers');
 
 app.controller('SettingsCtrl', function($scope, $state, DBService) {
-  $scope.hello = "Tjenna";
-
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.getUserDebt();
 
@@ -16,7 +14,7 @@ app.controller('SettingsCtrl', function($scope, $state, DBService) {
 
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
-        $scope.debt = promise.data.debt +"kr";
+        $scope.debt = promise.data.debt;
       }
     });
   }

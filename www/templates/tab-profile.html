@@ -1,20 +1,10 @@
 <ion-view view-title="Profil">
-  <ion-content>
+  <ion-content class="has-header has-tabs">
     <div class="card">
       <div class="item item-text-wrap" style="padding-bottom:0px;padding-top:0px">
         <highchart config="chartLobare" class="Chartcenter"></highchart>
       </div>
     </div>
-<!--     <div class="card" ng-show="lobScore.length > 0">
-      <div class="item" style="">
-        <table class="center">
-          <tr ng-repeat="lobare in lobScore | orderBy:'-debt'">
-            <td style="width: 100px;"><b>{{lobare.name}}</b></td>
-            <td>{{lobare.debt}} kr</td>
-          </tr>
-        </table>
-      </div>
-    </div> -->
     <div class="card">
       <div class="item item-text-wrap" style="padding-bottom:0px;padding-top:0px">
         <highchart config="chartAmount" class="Chartcenter"></highchart>
