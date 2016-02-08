@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="nu.tolva.streckbase" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>sample</name>
+  <name>Streckbase</name>
   <description>
-        An Ionic Framework and Cordova project.
+        Streckbase application
     </description>
-  <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
-    </author>
+  <author email="jimmy.hedstrom93@gmail.com"></author>
+  <author email="joakim.heldmann@gmail.com"></author>
   <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>

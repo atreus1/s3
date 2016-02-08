@@ -6,7 +6,7 @@
     <form class="list">
       <ion-list>
         <label class="item item-input inputField">
-          <input style="color:white;" type="text" pattern="\d*" ng-enter placeholder="Personnummer" ng-model="user.user_id">
+          <input style="color:white;" type="text" pattern="\d*" ng-enter placeholder="Personnummer" ng-model="user.user_id" ng-minlength="10" ng-maxlength="12" required>
         </label>      
       <button class="button button-calm button-block button-large" ng-disabled="!user.user_id" ng-click="checkID()">OK</button>
       <a href="#/login" class="button button-light button-clear button-block">Gå tillbaks</a>
