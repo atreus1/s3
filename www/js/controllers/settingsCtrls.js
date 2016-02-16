@@ -7,6 +7,7 @@ app.controller('SettingsCtrl', function($scope, $state, DBService) {
     $scope.firstname = window.localStorage['firstname'];
     $scope.lastname = window.localStorage['lastname'];
     $scope.email = window.localStorage['email'];
+    $scope.admin = window.localStorage['admin'] === '1' ? true : false;
   });
 
   $scope.getUserDebt = function() {    
@@ -25,6 +26,8 @@ app.controller('SettingsCtrl', function($scope, $state, DBService) {
     window.localStorage['firstname'] = "";
     window.localStorage['lastname'] = "";
     window.localStorage['debt'] = "";
+    window.localStorage['lobare'] = "";
+    window.localStorage['admin'] = "";
     $state.go('login');
   }  
 });
@@ -135,6 +138,46 @@ app.controller('PasswordCtrl', function($scope, $ionicPopup, $ionicHistory, DBSe
         }).then(function(res) {
           $scope.user.password = "";
         });          
+      }
+    });
+  }
+});
+
+app.controller('NewItemCtrl', function($scope, $state, $stateParams, $ionicPopup, DBService) {
+  $scope.item = {};
+  $scope.item.barcode = $stateParams.barcode;
+  $scope.item.image = "";
+  $scope.item.volume = "";
+  $scope.item.alcohol = "";
+
+  $scope.storeItem = function() {
+    var name = $scope.item.name;
+    if (name.indexOf("\'") > 0) {
+      name = name.replace("\'", "\\\'");
+    }
+
+    if (name.indexOf("\"") > 0) {
+      name = name.replace("\"", "\\\"");
+    }
+
+    var sendData = {
+      'tag':"addCompleteItem",
+      'name':name,
+      'image':$scope.item.image,
+      'price':$scope.item.price,
+      'volume':$scope.item.volume,
+      'alcohol':$scope.item.alcohol,
+      'barcode':$scope.item.barcode
+    };
+    console.log(sendData);
+    DBService.sendToDB(sendData, true).then(function(promise) {
+      if (promise.data.success === 1) {
+        $ionicPopup.alert({
+          title : "Klart",
+          subTitle: "Varan är tillagd!"
+        }).then(function(res) {
+            $state.go('tab.fav');
+        });         
       }
     });
   }

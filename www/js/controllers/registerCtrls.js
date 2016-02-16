@@ -72,6 +72,9 @@ app.controller('IDCtrl', function($scope, $state, $ionicPopup, DBService) {
             window.localStorage['user_id'] = id;
             window.localStorage['firstname'] = promise.data.user.firstname.charAt(0).toUpperCase() + promise.data.user.firstname.slice(1);
             window.localStorage['lastname'] = promise.data.user.lastname.charAt(0).toUpperCase() + promise.data.user.lastname.slice(1);
+            window.localStorage['debt'] = promise.data.user.debt;
+            window.localStorage['lobare'] = promise.data.user.lobare;
+            window.localStorage['admin'] = promise.data.user.admin;
 
             $state.go('register');
           } else {

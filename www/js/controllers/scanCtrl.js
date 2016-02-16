@@ -1,6 +1,6 @@
 var app = angular.module('starter.controllers');
 
-app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicHistory, $state, DBService, $cordovaVibration, $cordovaFlashlight) {
+app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicHistory, $state, DBService, $cordovaVibration, $cordovaFlashlight) {
   $scope.$on('$ionicView.enter', function(){
     $scope.openScanner();
   });
@@ -8,7 +8,7 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicHistory, $stat
   $scope.buy = function(barcode) {
     var sendData = {'tag':'purchaseBarcodeItem', 'user_id':window.localStorage['user_id'], 'barcode':barcode};        
 
-    DBService.sendToDB(sendData, true).then(function(promise) {
+    DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
         if (window.cordova) {
           $ionicPlatform.ready(function() {
@@ -17,7 +17,28 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicHistory, $stat
           });
         }
       } else {
-        $ionicHistory.goBack(-1);
+        $ionicPopup.alert({
+          title : "Fel",
+          subTitle: promise.data.error_msg
+        }).then(function(res) {
+          var admin = window.localStorage['admin']
+          if (admin && admin === "1") {
+            $ionicPopup.confirm({
+              title: 'Lägg till vara',
+              template: '<center>Vill du lägga till varan?',
+              cancelText: 'Nej',
+              okText: 'Ja'
+            }).then(function(res) {
+              if(res) {
+                $state.go("tab.new-item", {"barcode": barcode});
+              } else {
+                $ionicHistory.goBack(-1);    
+              }
+            });
+          } else {
+            $ionicHistory.goBack(-1);
+          }
+        });
       }
     });
   }
@@ -45,7 +66,6 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicHistory, $stat
             }          
           }, 
           function (error) {
-            //alert("Scanning failed: " + error);
             console.log("Issue with barcode scanner within app");
             if (avail) {
               $cordovaFlashlight.switchOff();

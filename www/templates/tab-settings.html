@@ -2,11 +2,11 @@
   <ion-content scroll="false" class="padding has-header has-tabs">
     <div class="list card">
       <div class="item" ng-if="debt > 0">
-        <h2 class="">{{firstname}} {{lastname}} <span class="assertive" style="float:right;">{{debt}}kr</span></h2>        
+        <h2 class="">{{firstname}} {{lastname}} <span ng-show="admin">(admin)</span> <span class="assertive" style="float:right;">{{debt}}kr</span></h2>        
         {{email}}
       </div>    
       <div class="item" ng-if="debt <= 0">
-        <h2 class="">{{firstname}} {{lastname}} <span class="balanced" style="float:right;">{{debt}}kr</span></h2>        
+        <h2 class="">{{firstname}} {{lastname}} <span ng-show="admin">(admin)</span> <span class="balanced" style="float:right;">{{debt}}kr</span></h2>        
         {{email}}        
       </div>    
     </div>
@@ -28,6 +28,12 @@
         <i class="icon ion-ios-arrow-right"></i>
       </a>
     </div>
+    <div class="list card" ng-show="admin">
+      <a class="item item-icon-right" href="#/tab/settings/new/">
+        <p class="dark">Lägg till ny vara</p>
+        <i class="icon ion-ios-arrow-right"></i>
+      </a>
+    </div>    
     <button class="button button-block button-assertive ink" ng-click="logout()">Logga ut</button>
   </ion-content>
 </ion-view>

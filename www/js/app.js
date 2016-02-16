@@ -79,6 +79,7 @@ angular.module('starter', ['ionic','starter.controllers','starter.services','ngC
 
   // Turn off back button text
   $ionicConfigProvider.backButton.text('').previousTitleText(false);
+  $ionicConfigProvider.tabs.position('bottom');
   
 
   $stateProvider
@@ -200,7 +201,16 @@ angular.module('starter', ['ionic','starter.controllers','starter.services','ngC
         controller: 'PasswordCtrl'
       }
     }
-  });  
+  })
+  .state('tab.new-item', {
+    url: '/settings/new/:barcode',
+    views: {
+      'tab-settings': {
+        templateUrl: 'templates/settings-add-item.html',
+        controller: 'NewItemCtrl'
+      }
+    }
+  });
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');

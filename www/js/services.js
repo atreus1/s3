@@ -8,7 +8,7 @@ angular.module('starter.services', [])
           if (data.success !== 1) {
             console.log(data.error_msg);
             if (showPopup) {
-              var welcomePopup = $ionicPopup.alert({
+              $ionicPopup.alert({
                 title : "Fel",
                 subTitle: data.error_msg
               });

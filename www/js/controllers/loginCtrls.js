@@ -25,12 +25,14 @@ app.controller('LoginCtrl', function($scope, $ionicPopup, $state, DBService) {
           });
         } else {
           // Store user in cache
-          //console.log(promise.data);
+          console.log(promise.data);
           window.localStorage['user_id'] = promise.data.user.user_id;
           window.localStorage['email'] = $scope.user.email;
           window.localStorage['firstname'] = promise.data.user.firstname;
           window.localStorage['lastname'] = promise.data.user.lastname;
           window.localStorage['debt'] = promise.data.user.debt;
+          window.localStorage['lobare'] = promise.data.user.lobare;
+          window.localStorage['admin'] = promise.data.user.admin;
 
           // Go to global feed
           $state.go('tab.feed');

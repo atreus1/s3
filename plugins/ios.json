@@ -7,19 +7,19 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-vibration": {
-            "PACKAGE_NAME": "com.ionicframework.sample374926"
-        },
-        "phonegap-plugin-barcodescanner": {
-            "PACKAGE_NAME": "com.ionicframework.sample374926"
-        },
-        "ionic-plugin-keyboard": {
+        "cordova-plugin-flashlight": {
             "PACKAGE_NAME": "nu.tolva.streckbase"
         },
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "nu.tolva.streckbase"
         },
-        "cordova-plugin-flashlight": {
+        "cordova-plugin-vibration": {
+            "PACKAGE_NAME": "nu.tolva.streckbase"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "nu.tolva.streckbase"
+        },
+        "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "nu.tolva.streckbase"
         }
     },

@@ -1,0 +1,27 @@
+<ion-view title="Lägg till ny vara">
+  <ion-content class="padding has-header has-tabs">
+    <form class="list">
+      <ion-list>
+        <label class="item item-input inputField">
+          <input style="color: white;" type="text" pattern="\d*" ng-enter placeholder="Streckkod" ng-model="item.barcode" required>
+        </label>        
+        <label class="item item-input inputField">
+          <input style="color: white;" type="text" ng-enter placeholder="Namn" ng-model="item.name" required>
+        </label>        
+        <label class="item item-input inputField">
+          <input style="color: white;" type="text" ng-enter placeholder="Bild (url)" ng-model="item.image">
+        </label>
+        <label class="item item-input inputField">
+          <input style="color: white;" type="number" ng-enter placeholder="Pris" ng-model="item.price" required>
+        </label>
+        <label class="item item-input inputField">
+          <input style="color: white;" type="number" ng-enter placeholder="Volym (cl)" ng-model="item.volume">
+        </label>
+        <label class="item item-input inputField">
+          <input style="color: white;" type="number" ng-enter placeholder="Alkohol (%)" ng-model="item.alcohol">
+        </label>        
+      </ion-list>
+      <button class="button button-positive button-block ink" ng-disabled="!item.barcode || !item.name || !item.price" ng-click="storeItem()">Spara</button>
+    </form>
+  </ion-content>
+</ion-view>
