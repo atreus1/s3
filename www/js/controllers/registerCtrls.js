@@ -24,7 +24,7 @@ app.controller('RegisterCtrl', function($scope, $state, $ionicPopup, DBService) 
         if (promise.data.success === 1) {
 
           window.localStorage['email'] = $scope.user.email;
-          window.localStorage['debt'] = 0;
+          window.localStorage['last_login'] = new Date();
 
           $ionicPopup.alert({
             title : "Registering klar!",

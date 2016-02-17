@@ -93,6 +93,20 @@ div.spinner {
   height: 85px !important;
 }
 
+.notActive {
+/*  -webkit-transition:0.5s linear all;
+  -moz-transition:0.5s linear all;
+  -o-transition:0.5s linear all;
+  transition:0.5s linear all;*/
+  box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.0);
+  -webkit-filter: blur(10px);
+  -moz-filter: blur(10px);
+  -o-filter: blur(10px);
+  -ms-filter: blur(10px);
+  filter: blur(10px);
+  opacity: 0.4;
+}
+
 /* Menu
 ==================================*/
 /*.menu .bar.bar-header.expanded {

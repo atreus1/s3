@@ -4,8 +4,15 @@ app.controller('LoginCtrl', function($scope, $ionicPopup, $state, DBService) {
 
   $scope.$on('$ionicView.loaded', function() {
     // Check if user is already logged in
-    if(window.localStorage['email']) {
-      $state.go('tab.fav');
+    if(window.localStorage['email'] && window.localStorage['last_login']) {
+      var last_login = moment(new Date(window.localStorage['last_login']));
+      var now = moment(new Date());
+      var diff = Math.abs(last_login.diff(now, 'days'));
+
+      // Make user have to re-login every 60 days (to check if user is blocked)
+      if (diff < 60) {
+        $state.go('tab.fav');
+      }
     }
   });
 
@@ -25,7 +32,7 @@ app.controller('LoginCtrl', function($scope, $ionicPopup, $state, DBService) {
           });
         } else {
           // Store user in cache
-          console.log(promise.data);
+          //console.log(promise.data);
           window.localStorage['user_id'] = promise.data.user.user_id;
           window.localStorage['email'] = $scope.user.email;
           window.localStorage['firstname'] = promise.data.user.firstname;
@@ -33,6 +40,9 @@ app.controller('LoginCtrl', function($scope, $ionicPopup, $state, DBService) {
           window.localStorage['debt'] = promise.data.user.debt;
           window.localStorage['lobare'] = promise.data.user.lobare;
           window.localStorage['admin'] = promise.data.user.admin;
+          window.localStorage['last_login'] = new Date();
+
+          alert(window.localStorage['last_login']);
 
           // Go to global feed
           $state.go('tab.feed');
@@ -68,7 +78,7 @@ app.controller('ResetCtrl', function($scope, $ionicPopup, $state, DBService) {
 
       DBService.sendToDB(sendData, false).then(function(promise) {
         if (promise.data.success === 1) {
-          console.log("user_id is correct");
+          //console.log("user_id is correct");
 
           var email = $scope.user.email;
           email = email.toLowerCase();

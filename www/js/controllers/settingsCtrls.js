@@ -21,13 +21,7 @@ app.controller('SettingsCtrl', function($scope, $state, DBService) {
   }
 
   $scope.logout = function() {
-    window.localStorage['user_id'] = "";
-    window.localStorage['email'] = "";
-    window.localStorage['firstname'] = "";
-    window.localStorage['lastname'] = "";
-    window.localStorage['debt'] = "";
-    window.localStorage['lobare'] = "";
-    window.localStorage['admin'] = "";
+    localStorage.clear();
     $state.go('login');
   }  
 });
@@ -53,7 +47,7 @@ app.controller('PurchasesCtrl', function($scope, $ionicPopup, DBService) {
     });
   }
 
-  $scope.$on('$ionicView.loaded', function() {
+  $scope.$on('$ionicView.enter', function() {
     $scope.getMyPurchases();
   });
 

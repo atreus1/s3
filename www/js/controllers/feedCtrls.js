@@ -1,18 +1,27 @@
 var app = angular.module('starter.controllers');
 
 app.controller('FeedCtrl', function($scope, ionicMaterialMotion, ionicMaterialInk, DBService) {
+  // Cache the old feed
+  $scope.feed = {};
+
+  if (window.localStorage["feed"]) {
+    $scope.feed = JSON.parse(window.localStorage["feed"]);
+  }  
+
   function getColor() {
-    var color = ['pink', 'green', 'blue', 'purple'];
+    var color = ['#ED1176', '#E23227', '#086788', '#FF773D', '#87E752'];
     color = color[Math.floor(Math.random()*color.length)];
     return color;
   }
       
   var sendData = {'tag':'getFeed'};
   $scope.doRefresh = function() {
+    
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
-        $scope.feed = promise.data.feed;
-        console.log($scope.feed);
+        $scope.feed = promise.data.feed;        
+        //console.log($scope.feed);
+
         angular.forEach($scope.feed, function(c) {
           c.date = new Date(c.date*1000);
           c.datediff = moment(c.date).diff(moment(new Date), 'days');
@@ -21,7 +30,10 @@ app.controller('FeedCtrl', function($scope, ionicMaterialMotion, ionicMaterialIn
           if (!c.image) {
             c.image = getColor();
           }
-        }); 
+        });
+
+        // Save for cache
+        window.localStorage["feed"] = JSON.stringify($scope.feed);
       }
     }).finally(function() {
       // Stop the ion-refresher from spinning
@@ -30,7 +42,7 @@ app.controller('FeedCtrl', function($scope, ionicMaterialMotion, ionicMaterialIn
   };
 
   // Update feed when user enters scene
-  $scope.$on('$ionicView.loaded', function(){
+  $scope.$on('$ionicView.beforeEnter', function(){
       $scope.doRefresh();
   });
   //ionicMaterialMotion.blinds();

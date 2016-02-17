@@ -6,51 +6,87 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
   $scope.query = {}
   var locked = false;
   var allItems = {};
+  var thisItem;
 
-  $scope.onTap = function(i) {
-    i.count += 1;
+  if (window.localStorage["items"]) {
+    $scope.items = JSON.parse(window.localStorage["items"]);
   }
 
+  $scope.isSelected = function(item) {
+    if ($scope.selected) {
+      return $scope.selected === item;  
+    } else {
+      return true;
+    }
+  }
+
+  $scope.$watch("query.text.name",function() {
+    if ($scope.selected) {
+      $scope.deselect(thisItem);
+    }
+  });  
+
+  $scope.onTap = function(item) {
+    if (!$scope.selected) {
+      $scope.selected = item;
+      thisItem = item;
+    }
+    
+    if ($scope.isSelected(item)) {
+      item.count += 1;
+    } else {
+      $scope.deselect(thisItem);
+    }
+  }
+
+  $scope.deselect = function(item) {
+    $scope.selected = null;
+    item.count = 0;
+  }
+
+  $scope.onHold = function(item) {
+    thisItem = item;
+    
+    if (!$scope.selected) {
+      item.count = 1;
+    }
+
+    var totalPrice = item.count * parseInt(item.price);
+    if (totalPrice >= 50 || item.count >= 10) {
+      $ionicPopup.confirm({
+        title: 'Bekräfta köp',
+        template: '<center>Vill du verkligen köpa '+item.count+'st '+item.name+' för '+totalPrice+'kr?</center>',
+        cancelText: 'Nej',
+        okText: 'Ja'
+      }).then(function(res) {
+        if(res) {
+          $scope.buy(item.id, item.count);
+        } else {
+          $scope.deselect(item);
+        }
+      });        
+    } else {
+      $scope.buy(item.id, item.count);
+    }
+  }
+
+
   $scope.buy = function(item, count) {
-    console.log("item: "+item+" count: "+count);
     var sendData = {'tag':'purchaseItem', 'user_id': window.localStorage['user_id'], 'item_id':item, 'count':count};
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
         if (window.cordova) {
           $ionicPlatform.ready(function() {
             $cordovaVibration.vibrate(100);
+            $scope.deselect(thisItem);
             $state.go('tab.feed');
           });
         } else {
+          $scope.deselect(thisItem);
           $state.go('tab.feed');
         }
       }
     });    
-  }
-
-  // $scope.onHold = function(item, name, count, price) {   
-  $scope.onHold = function(i) {     
-    console.log("item: "+i.id+" count: "+i.count+" price: "+i.price);
-
-    if (i.count > 0) {
-      var totalPrice = i.count * parseInt(i.price);
-      if (totalPrice >= 50 || i.count >= 10) {
-        $ionicPopup.confirm({
-          title: 'Bekräfta köp',
-          template: '<center>Vill du verkligen köpa '+i.count+'st '+i.name+' för '+totalPrice+'kr?</center>',
-          cancelText: 'Nej',
-          okText: 'Ja'
-        }).then(function(res) {
-          if(res) {
-            $scope.buy(i.id, i.count);
-          } else {
-            i.count = 0;
-          }
-        });        
-      } else {
-        $scope.buy(i.id, i.count);
-      }
-    }
   }
 
   function getColor() {
@@ -60,25 +96,10 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
   }  
 
   $scope.doRefresh = function() {
-    // var sendData = {'tag':'getMostBuyedItem', 'user_id':window.localStorage['user_id']};
-    // DBService.sendToDB(sendData, false).then(function(promise) {
-    //   if (promise.data.success === 1) {
-    //     $scope.items = promise.data.items;
-    //     //console.log($scope.items);
-    //     angular.forEach($scope.items, function(c) {
-    //       if (!c.image) {
-    //         c.image = getColor();            
-    //       }
-    //       c.count = 0;
-    //     });
-    //   }
-    // });
-
     var sendData = {'tag':'getAllItems', 'user_id':window.localStorage['user_id']};
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
         var data = promise.data.items;
-        console.log($scope.items);
 
         var objArray = {};
 
@@ -114,7 +135,10 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
             c.image = getColor();            
           }
           c.count = 0;
-        });        
+        });
+
+        // Save for cache
+        window.localStorage["items"] = JSON.stringify($scope.items);
       }
     });    
   }

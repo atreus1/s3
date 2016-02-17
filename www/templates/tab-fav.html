@@ -7,13 +7,13 @@
       </label>
     </div>
     <div class="list no-padding">
-      <div class="card clear-bg in" ng-repeat="i in items | filter: query.text:strict" on-hold="onHold(i)">
-        <a class="item dark-bg item-bg-image item-text-wrap specialCard" on-tap="onTap(i)" style="background: url('{{i.image}}') center no-repeat;">
+      <div class="card clear-bg in favs" ng-repeat="i in items | filter: query.text:strict" on-tap="onTap(i)" on-hold="onHold(i)" ng-class="{notActive: !isSelected(i)}">
+        <a class="item dark-bg item-bg-image item-text-wrap specialCard" style="background: url('{{i.image}}') center no-repeat;">
           <h2>{{i.name}}</h2>
           <span class="badge badge-assertive" ng-show="i.count">{{i.count}}</span>
           <div class="card-footer">
             <p ng-show="i.amount" style="float:left;">#{{i.amount}} - {{i.price}}kr</p>
-            <i class="icon ion-close-circled stable" style="position:absolute; font-size:32px; right: 32px; bottom:10px;" ng-show="i.count" on-tap="i.count=-1"></i>
+            <i class="icon ion-close-circled stable" style="position:absolute; font-size:32px; right: 32px; bottom:10px;" ng-show="i.count" on-tap="deselect(i); $event.stopPropagation()"></i>
           </div>
         </a>
       </div>
