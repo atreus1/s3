@@ -21,6 +21,9 @@
         },
         "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "nu.tolva.streckbase"
+        },
+        "cordova-plugin-nativeaudio": {
+            "PACKAGE_NAME": "nu.tolva.streckbase"
         }
     },
     "dependent_plugins": {}

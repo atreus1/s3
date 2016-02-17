@@ -1,12 +1,19 @@
 var app = angular.module('starter.controllers');
 
-app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, DBService, $cordovaVibration) {
+app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, DBService, $cordovaVibration, $cordovaNativeAudio) {
   $scope.items = {};
   $scope.taps = 0;
   $scope.query = {}
   var locked = false;
   var allItems = {};
   var thisItem;
+
+  if (window.cordova) {
+    $ionicPlatform.ready(function() {
+      $cordovaNativeAudio.preloadSimple("open", "audio/open.mp3");
+      $cordovaNativeAudio.preloadSimple("eating", "audio/eating.mp3");
+    });
+  }
 
   if (window.localStorage["items"]) {
     $scope.items = JSON.parse(window.localStorage["items"]);
@@ -46,7 +53,8 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
 
   $scope.onHold = function(item) {
     thisItem = item;
-    
+    console.log(item);
+
     if (!$scope.selected) {
       item.count = 1;
     }
@@ -60,23 +68,31 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
         okText: 'Ja'
       }).then(function(res) {
         if(res) {
-          $scope.buy(item.id, item.count);
+          $scope.buy(item);
         } else {
           $scope.deselect(item);
         }
       });        
     } else {
-      $scope.buy(item.id, item.count);
+      $scope.buy(item);
     }
   }
 
 
-  $scope.buy = function(item, count) {
-    var sendData = {'tag':'purchaseItem', 'user_id': window.localStorage['user_id'], 'item_id':item, 'count':count};
+  $scope.buy = function(item) {
+    var sendData = {'tag':'purchaseItem', 'user_id': window.localStorage['user_id'], 'item_id':item.id, 'count':item.count};
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
+        console.log("hej",item);
         if (window.cordova) {
           $ionicPlatform.ready(function() {
+
+            if (item.volume || item.alcohol) {
+              $cordovaNativeAudio.play("open");
+            } else {
+              $cordovaNativeAudio.play("eating");
+            }
+            
             $cordovaVibration.vibrate(100);
             $scope.deselect(thisItem);
             $state.go('tab.feed');
@@ -114,7 +130,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
         // Make it to a normal array of objects
         for (var key in objArray) {
           if (objArray.hasOwnProperty(key)) {
-            itemsArray[index] = {id: objArray[key].id, amount: objArray[key].amount, name: objArray[key].name, price: objArray[key].price, image: objArray[key].image}
+            itemsArray[index] = {id: objArray[key].id, amount: objArray[key].amount, name: objArray[key].name, price: objArray[key].price, volume: objArray[key].volume, alcohol: objArray[key].alcohol,  image: objArray[key].image}
             index++;
           }
         }
