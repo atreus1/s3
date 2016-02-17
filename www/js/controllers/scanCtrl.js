@@ -1,9 +1,16 @@
 var app = angular.module('starter.controllers');
 
-app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicHistory, $state, DBService, $cordovaVibration, $cordovaFlashlight) {
+app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicHistory, $state, DBService, $cordovaVibration, $cordovaFlashlight, $cordovaNativeAudio) {
   $scope.$on('$ionicView.enter', function(){
     $scope.openScanner();
   });
+
+  if (window.cordova) {
+    $ionicPlatform.ready(function() {
+      $cordovaNativeAudio.preloadSimple("open", "audio/open.mp3");
+      $cordovaNativeAudio.preloadSimple("eating", "audio/eating.mp3");
+    });
+  }  
 
   $scope.buy = function(barcode) {
     var sendData = {'tag':'purchaseBarcodeItem', 'user_id':window.localStorage['user_id'], 'barcode':barcode};        
@@ -12,6 +19,13 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
       if (promise.data.success === 1) {
         if (window.cordova) {
           $ionicPlatform.ready(function() {
+          	
+            if (promise.data.item.volume || promise.data.item.alcohol) {
+              $cordovaNativeAudio.play("open");
+            } else {
+              $cordovaNativeAudio.play("eating");
+            }
+
             $cordovaVibration.vibrate(100);
             $state.go('tab.feed');
           });
@@ -32,7 +46,7 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
               if(res) {
                 $state.go("tab.new-item", {"barcode": barcode});
               } else {
-                $ionicHistory.goBack(-1);    
+                $ionicHistory.goBack(-1);
               }
             });
           } else {
