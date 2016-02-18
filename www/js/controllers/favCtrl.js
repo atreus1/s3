@@ -8,12 +8,12 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
   var allItems = {};
   var thisItem;
   $scope.passiveStyle = {
-    "-webkit-filter": "blur(10px)",
-    "-moz-filter": "blur(10px)",
-    "-o-filter": "blur(10px)",
-    "-ms-filter": "blur(10px)",
-    "filter": "blur(10px)",
-    "opacity": "0.4"
+    "-webkit-filter": "blur(6px)",
+    "-moz-filter": "blur(6px)",
+    "-o-filter": "blur(6px)",
+    "-ms-filter": "blur(6px)",
+    "filter": "blur(6px)",
+    "opacity": "0.5"
   }
 
   if (window.cordova) {
@@ -37,7 +37,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
 
   $scope.$watch("query.text.name",function() {
     if ($scope.selected) {
-      $scope.deselect(thisItem);
+      $scope.deselect();
     }
   });  
 
@@ -51,40 +51,37 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
       if ($scope.isSelected(item)) {
         item.count += 1;
       } else {
-        $scope.deselect(thisItem);
+        $scope.deselect();
       }
     }, 0);
   }
 
-  $scope.deselect = function(item) {
+  $scope.deselect = function() {
     $scope.selected = null;
-    item.count = 0;
+    thisItem.count = 0;
   }
 
-  $scope.onHold = function(item) {
-    thisItem = item;
-    console.log(item);
-
+  $scope.checkOut = function() {
     if (!$scope.selected) {
-      item.count = 1;
+      thisItem.count = 1;
     }
 
-    var totalPrice = item.count * parseInt(item.price);
-    if (totalPrice >= 50 || item.count >= 10) {
+    var totalPrice = thisItem.count * parseInt(thisItem.price);
+    if (totalPrice >= 50 || thisItem.count >= 10) {
       $ionicPopup.confirm({
         title: 'Bekräfta köp',
-        template: '<center>Vill du verkligen köpa '+item.count+'st '+item.name+' för '+totalPrice+'kr?</center>',
+        template: '<center>Vill du verkligen köpa '+thisItem.count+'st '+thisItem.name+' för '+totalPrice+'kr?</center>',
         cancelText: 'Nej',
         okText: 'Ja'
       }).then(function(res) {
         if(res) {
-          $scope.buy(item);
+          $scope.buy(thisItem);
         } else {
-          $scope.deselect(item);
+          $scope.deselect();
         }
       });        
     } else {
-      $scope.buy(item);
+      $scope.buy(thisItem);
     }
   }
 
@@ -93,7 +90,6 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
     var sendData = {'tag':'purchaseItem', 'user_id': window.localStorage['user_id'], 'item_id':item.id, 'count':item.count};
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
-        console.log("hej",item);
         if (window.cordova) {
           $ionicPlatform.ready(function() {
 

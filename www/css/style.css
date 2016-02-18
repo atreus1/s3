@@ -97,6 +97,22 @@ div.spinner {
     bottom: 60px;
 }
 
+.buyFab {
+  top: auto;
+  right: 16px;
+  bottom: 65px;
+  left: auto;
+  position: absolute;
+}
+
+.deleteFab {
+  top: auto;
+  right: 84px;
+  bottom: 65px;
+  left: auto;
+  position: absolute;
+}
+
 
 /* Login
 ==================================*/

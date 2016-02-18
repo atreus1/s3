@@ -162,7 +162,7 @@ angular.module('starter', ['ionic','starter.controllers','starter.services','ngC
       'tab-profile': {
         templateUrl: 'templates/tab-profile.html',
         controller: 'ProfileCtrl'
-      }
+      }   
     }
   })
 
