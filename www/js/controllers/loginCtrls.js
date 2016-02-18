@@ -42,8 +42,6 @@ app.controller('LoginCtrl', function($scope, $ionicPopup, $state, DBService) {
           window.localStorage['admin'] = promise.data.user.admin;
           window.localStorage['last_login'] = new Date();
 
-          alert(window.localStorage['last_login']);
-
           // Go to global feed
           $state.go('tab.feed');
         }

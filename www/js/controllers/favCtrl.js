@@ -1,12 +1,20 @@
 var app = angular.module('starter.controllers');
 
-app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, DBService, $cordovaVibration, $cordovaNativeAudio) {
+app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ionicPopup, DBService, $cordovaVibration, $cordovaNativeAudio) {
   $scope.items = {};
   $scope.taps = 0;
   $scope.query = {}
   var locked = false;
   var allItems = {};
   var thisItem;
+  $scope.passiveStyle = {
+    "-webkit-filter": "blur(10px)",
+    "-moz-filter": "blur(10px)",
+    "-o-filter": "blur(10px)",
+    "-ms-filter": "blur(10px)",
+    "filter": "blur(10px)",
+    "opacity": "0.4"
+  }
 
   if (window.cordova) {
     $ionicPlatform.ready(function() {
@@ -34,16 +42,18 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $ionicPopup, 
   });  
 
   $scope.onTap = function(item) {
-    if (!$scope.selected) {
-      $scope.selected = item;
-      thisItem = item;
-    }
-    
-    if ($scope.isSelected(item)) {
-      item.count += 1;
-    } else {
-      $scope.deselect(thisItem);
-    }
+    $timeout(function() {
+      if (!$scope.selected) {
+        $scope.selected = item;
+        thisItem = item;      
+      }
+      
+      if ($scope.isSelected(item)) {
+        item.count += 1;
+      } else {
+        $scope.deselect(thisItem);
+      }
+    }, 0);
   }
 
   $scope.deselect = function(item) {

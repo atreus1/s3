@@ -278,7 +278,7 @@ app.controller('ProfileCtrl', function($scope, DBService) {
     });  
   }  
 
-  $scope.$on('$ionicView.loaded', function(){
+  $scope.$on('$ionicView.beforeEnter', function(){
     $scope.doRefresh();
   });
 });

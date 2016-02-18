@@ -7,10 +7,10 @@
       </label>
     </div>
     <div class="list no-padding">
-      <div class="card clear-bg in favs" ng-repeat="i in items | filter: query.text:strict" on-tap="onTap(i)" on-hold="onHold(i)" ng-class="{notActive: !isSelected(i)}">
+      <div class="card clear-bg in favs" ng-repeat="i in items | filter: query.text:strict" on-tap="onTap(i); $event.stopPropagation()" on-hold="onHold(i)" ng-style="isSelected(i) ? {} : passiveStyle" ng-cloak>
         <a class="item dark-bg item-bg-image item-text-wrap specialCard" style="background: url('{{i.image}}') center no-repeat;">
-          <h2>{{i.name}}</h2>
-          <span class="badge badge-assertive" ng-show="i.count">{{i.count}}</span>
+          <h2 ng-bind="i.name"></h2>
+          <span class="badge badge-assertive" ng-show="i.count" ng-bind="i.count"></span>
           <div class="card-footer">
             <p ng-show="i.amount" style="float:left;">#{{i.amount}} - {{i.price}}kr</p>
             <i class="icon ion-close-circled stable" style="position:absolute; font-size:32px; right: 32px; bottom:10px;" ng-show="i.count" on-tap="deselect(i); $event.stopPropagation()"></i>
@@ -20,45 +20,3 @@
     </div>
   </ion-content>
 </ion-view>
-
-
-
-<!-- <ion-view hide-nav-bar="false" view-title="Favoriter">
-    <ion-content class="has-header has-tabs">
-        <div class="list half">
-            <div ng-controller="FavCtrl" ng-repeat="i in items" ng-if="$even" on-hold="onHold(i.item_id, count)" ng-init="count=0" class="card card-gallery item item-text-wrap">
-                <div class="ink dark-bg" on-tap="count = count + 1" style="background: url('{{i.image}}') fixed;">
-                    <h2>{{i.name}}</h2>
-                    <h1 style="margin-top: -10px;"><center ng-show="count"> {{count}}</center></h1>
-                </div>
-                <div class="item tabs tabs-secondary tabs-icon-left">
-                    <a class="tab-item stable-bg assertive">
-                        <i class="icon ion-heart"></i>
-                        <span class="assertive">{{i.heavydrinker}}</span>
-                    </a>
-                    <a class="tab-item stable-bg positive">
-                        <i class="icon ion-close" ng-show="count" on-tap="count=0"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="list half">
-            <div ng-controller="FavCtrl" ng-repeat="i in items" ng-if="$odd" on-hold="onHold(i.item_id, count)" ng-init="count=0" class="card card-gallery item item-text-wrap">
-                <div class="ink dark-bg" on-tap="count = count + 1" style="background: url('{{i.image}}') fixed;">
-                    <h2>{{i.name}}</h2>
-                    <h1 style="margin-top: -10px;"><center ng-show="count"> {{count}}</center></h1>
-                </div>
-                <div class="item tabs tabs-secondary tabs-icon-left">
-                    <a class="tab-item stable-bg assertive">
-                        <i class="icon ion-heart"></i>
-                        <span class="assertive">{{i.heavydrinker}}</span>
-                    </a>
-                    <a class="tab-item stable-bg positive-900">
-                        <i class="icon ion-close" ng-show="count" on-tap="count=0"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </ion-content>
-</ion-view>
- -->
