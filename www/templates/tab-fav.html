@@ -21,6 +21,6 @@
       </div>
     </div>    
   </ion-content>
-  <button id="fab-profile" class="button button-fab deleteFab button-light" ng-click="deselect()" ng-show="!isSelected()"><i class="icon ion-close"></i></button>
-  <button id="fab-profile" class="button button-fab buyFab button-royal-900" ng-click="checkOut()" ng-show="!isSelected()"><i class="icon ion-ios-cart"></i></button>
+  <button id="fab-profile" class="button button-fab deleteFab button-light fabShow ng-cloak ng-hide" ng-click="deselect()" ng-show="!isSelected()"><i class="icon ion-close"></i></button>
+  <button id="fab-profile" class="button button-fab buyFab button-royal-900 fabShow ng-cloak ng-hide" ng-click="checkOut()" ng-show="!isSelected()"><i class="icon ion-ios-cart"></i></button>
 </ion-view>

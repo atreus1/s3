@@ -1,3 +1,4 @@
+
 /* General
 ==================================*/
 h1 {
@@ -113,23 +114,20 @@ div.spinner {
   position: absolute;
 }
 
-
-/* Login
-==================================*/
-.app-icon {
-    background-color: #fff;
-    background: url('../img/crown.jpg') center;
-    background-size: cover;
-    border-radius: 50%;
-    height: 125px;
-    margin: 0 auto;
-    width: 125px;
+.fabShow {
+  opacity: 1;
+ /* bottom: 65px;*/
 }
 
-.social-login {
-    position: fixed;
-    bottom: 0;
+.fabShow.ng-hide-add, .fabShow.ng-hide-remove {
+  transition: all linear 0.2s;
 }
+
+.fabShow.ng-hide {
+  /*bottom: -20px;*/
+  opacity: 0;
+}
+
 
 /* Feed avatar
 ===================================*/
