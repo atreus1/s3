@@ -7,19 +7,21 @@ app.factory('SettingsService', function() {
     // default settings
     settings = {
       "cacheData": true,
-      "allowAudio": true
+      "allowAudio": true,
+      "allowVibration": true
     };
     window.localStorage['settings'] = JSON.stringify(settings);
   } else {
     var parsed = JSON.parse(window.localStorage['settings']); 
     settings = {
       "cacheData": parsed.cacheData,
-      "allowAudio": parsed.allowAudio
+      "allowAudio": parsed.allowAudio,
+      "allowVibration": parsed.allowVibration
     };    
   }
 
   function getSettings() {
-    console.log("returning settings");
+    //console.log("returning settings",settings);
     return settings;
   };
   function updateSettings(key, value) {

@@ -4,6 +4,7 @@ app.controller('SettingsCtrl', function($scope, $state, DBService, SettingsServi
   var storedSettings = SettingsService.getSettings()
   $scope.settings = {};  
   $scope.settings.allowAudio = storedSettings.allowAudio;
+  $scope.settings.allowVibration = storedSettings.allowVibration;
 
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.getUserDebt();
@@ -19,7 +20,9 @@ app.controller('SettingsCtrl', function($scope, $state, DBService, SettingsServi
       SettingsService.updateSettings("cacheData", $scope.settings.cache);
     } else if (type === 'allowAudio') {
       SettingsService.updateSettings("allowAudio", $scope.settings.allowAudio);
-    }
+    } else if (type === 'allowVibration') {
+      SettingsService.updateSettings("allowVibration", $scope.settings.allowVibration);
+    }    
   }
 
   $scope.getUserDebt = function() {    

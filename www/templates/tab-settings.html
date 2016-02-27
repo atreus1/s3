@@ -1,5 +1,5 @@
 <ion-view view-title="Inställningar">
-  <ion-content scroll="false" class="padding has-header has-tabs">
+  <ion-content class="padding has-header">
     <div class="list card">
       <div class="item" ng-if="debt > 0">
         <h2 class="">{{firstname}} {{lastname}} <span ng-show="admin">(admin)</span> <span class="assertive" style="float:right;">{{debt}}kr</span></h2>        
@@ -36,15 +36,26 @@
     </div>
     <div class="list card">
       <div class="item item-toggle">
-        <p class="dark">Ljud i appen</p>
-        <label class="toggle toggle-royal-900">
+        <p class="dark">Ljud vid köp</p>
+        <label class="toggle">
           <input type="checkbox" ng-model="settings.allowAudio" ng-change="updateSetting('allowAudio')">
           <div class="track">
             <div class="handle"></div>
           </div>
         </label>
       </div>
-    </div>      
-    <button class="button button-block button-assertive ink" ng-click="logout()">Logga ut</button>
+    </div>
+    <div class="list card">
+      <div class="item item-toggle">
+        <p class="dark">Vibration vid köp</p>
+        <label class="toggle">
+          <input type="checkbox" ng-model="settings.allowVibration" ng-change="updateSetting('allowVibration')">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </div>
+    </div>    
+    <button class="button button-block button-assertive ink" style="margin-bottom: 40px;" ng-click="logout()">Logga ut</button>
   </ion-content>
 </ion-view>

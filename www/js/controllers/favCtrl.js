@@ -1,6 +1,6 @@
 var app = angular.module('starter.controllers');
 
-app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ionicPopup, DBService, $cordovaVibration, $cordovaNativeAudio) {
+app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ionicPopup, DBService, SettingsService, $cordovaVibration, $cordovaNativeAudio) {
   $scope.items = {};
   $scope.taps = 0;
   $scope.query = {}
@@ -92,14 +92,18 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
       if (promise.data.success === 1) {
         if (window.cordova) {
           $ionicPlatform.ready(function() {
+          	if (SettingsService.getSettings().allowAudio) {
+            	if ((item.volume || item.alcohol) && (item.volume !== "0" || item.alcohol !== "0")) {
+              		$cordovaNativeAudio.play("open");
+            	} else {
+              		$cordovaNativeAudio.play("eating");
+            	}
+            }
 
-            if (item.volume || item.alcohol) {
-              $cordovaNativeAudio.play("open");
-            } else {
-              $cordovaNativeAudio.play("eating");
+            if (SettingsService.getSettings().allowVibration) {
+            	$cordovaVibration.vibrate(100);	
             }
             
-            $cordovaVibration.vibrate(100);
             $scope.deselect(thisItem);
             $state.go('tab.feed');
           });
