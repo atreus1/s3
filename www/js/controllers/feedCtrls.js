@@ -19,21 +19,28 @@ app.controller('FeedCtrl', function($scope, ionicMaterialMotion, ionicMaterialIn
     
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
-        $scope.feed = promise.data.feed;        
-        //console.log($scope.feed);
+        var events = promise.data.feed;
 
-        angular.forEach($scope.feed, function(c) {
+        angular.forEach(events, function(c) {
           c.date = new Date(c.date*1000);
           c.datediff = moment(c.date).diff(moment(new Date), 'days');
-          if(c.comments > 0)
+          if (c.comments > 0) {
             c.multi = c.multi-(c.comments-1);
+          }
+
           if (!c.image) {
             c.image = getColor();
+          } else {
+            if (c.image === "local") {
+              c.image = "img/items/"+c.item_id+".jpg";
+            }
           }
         });
 
+        $scope.feed = events;
+
         // Save for cache
-        window.localStorage["feed"] = JSON.stringify($scope.feed);
+        window.localStorage["feed"] = JSON.stringify(events);
       }
     }).finally(function() {
       // Stop the ion-refresher from spinning

@@ -1,6 +1,10 @@
 var app = angular.module('starter.controllers');
 
-app.controller('SettingsCtrl', function($scope, $state, DBService) {
+app.controller('SettingsCtrl', function($scope, $state, DBService, SettingsService) {
+  var storedSettings = SettingsService.getSettings()
+  $scope.settings = {};  
+  $scope.settings.allowAudio = storedSettings.allowAudio;
+
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.getUserDebt();
 
@@ -9,6 +13,14 @@ app.controller('SettingsCtrl', function($scope, $state, DBService) {
     $scope.email = window.localStorage['email'];
     $scope.admin = window.localStorage['admin'] === '1' ? true : false;
   });
+
+  $scope.updateSetting = function(type) {
+    if (type === 'cache') {
+      SettingsService.updateSettings("cacheData", $scope.settings.cache);
+    } else if (type === 'allowAudio') {
+      SettingsService.updateSettings("allowAudio", $scope.settings.allowAudio);
+    }
+  }
 
   $scope.getUserDebt = function() {    
     var sendData = {'tag':"getMyDebt", 'user_id':window.localStorage['user_id']};

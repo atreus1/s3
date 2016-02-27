@@ -33,7 +33,18 @@
         <p class="dark">Lägg till ny vara</p>
         <i class="icon ion-ios-arrow-right"></i>
       </a>
-    </div>    
+    </div>
+    <div class="list card">
+      <div class="item item-toggle">
+        <p class="dark">Ljud i appen</p>
+        <label class="toggle toggle-royal-900">
+          <input type="checkbox" ng-model="settings.allowAudio" ng-change="updateSetting('allowAudio')">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </div>
+    </div>      
     <button class="button button-block button-assertive ink" ng-click="logout()">Logga ut</button>
   </ion-content>
 </ion-view>

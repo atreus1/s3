@@ -136,12 +136,18 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
         // Make it to a normal array of objects
         for (var key in objArray) {
           if (objArray.hasOwnProperty(key)) {
-            itemsArray[index] = {id: objArray[key].id, amount: objArray[key].amount, name: objArray[key].name, price: objArray[key].price, volume: objArray[key].volume, alcohol: objArray[key].alcohol,  image: objArray[key].image}
+            var img;
+            if (objArray[key].image === "local") {
+              img = "img/items/"+objArray[key].id+".jpg";
+            } else {
+              img = objArray[key].image;
+            }
+            itemsArray[index] = {id: objArray[key].id, amount: objArray[key].amount, name: objArray[key].name, price: objArray[key].price, volume: objArray[key].volume, alcohol: objArray[key].alcohol,  image: img}
             index++;
           }
         }
 
-        // console.log(itemsArray);
+        console.log(itemsArray);
 
         // Sort the array. (Angular sort did not work so I'm using this one instead)
         itemsArray.sort(function(a, b) {
