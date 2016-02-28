@@ -1,5 +1,5 @@
 <ion-view title="Lägg till ny vara">
-  <ion-content class="padding has-header has-tabs">
+  <ion-content class="padding has-header">
     <form class="list">
       <ion-list>
         <label class="item item-input inputField">
@@ -22,6 +22,7 @@
         </label>        
       </ion-list>
       <button class="button button-positive button-block ink" ng-disabled="!item.barcode || !item.name || !item.price" ng-click="storeItem()">Spara</button>
+      <button class="button button-assertive button-block ink" style="margin-bottom: 40px;" ng-click="cancel()">Avbryt</button>      
     </form>
   </ion-content>
 </ion-view>

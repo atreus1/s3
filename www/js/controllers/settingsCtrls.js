@@ -3,6 +3,7 @@ var app = angular.module('starter.controllers');
 app.controller('SettingsCtrl', function($scope, $state, DBService, SettingsService) {
   var storedSettings = SettingsService.getSettings()
   $scope.settings = {};  
+  $scope.settings.cacheData = storedSettings.cacheData;
   $scope.settings.allowAudio = storedSettings.allowAudio;
   $scope.settings.allowVibration = storedSettings.allowVibration;
 
@@ -16,8 +17,8 @@ app.controller('SettingsCtrl', function($scope, $state, DBService, SettingsServi
   });
 
   $scope.updateSetting = function(type) {
-    if (type === 'cache') {
-      SettingsService.updateSettings("cacheData", $scope.settings.cache);
+    if (type === 'cacheData') {
+      SettingsService.updateSettings("cacheData", $scope.settings.cacheData);
     } else if (type === 'allowAudio') {
       SettingsService.updateSettings("allowAudio", $scope.settings.allowAudio);
     } else if (type === 'allowVibration') {
@@ -189,5 +190,9 @@ app.controller('NewItemCtrl', function($scope, $state, $stateParams, $ionicPopup
         });         
       }
     });
+  }
+
+  $scope.cancel = function() {
+    $state.go("tab.settings");
   }
 });

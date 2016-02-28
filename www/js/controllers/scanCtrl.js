@@ -1,6 +1,6 @@
 var app = angular.module('starter.controllers');
 
-app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicHistory, $state, DBService, $cordovaVibration, $cordovaFlashlight, $cordovaNativeAudio) {
+app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicHistory, $state, DBService, SettingsService, $cordovaVibration, $cordovaFlashlight, $cordovaNativeAudio) {
   $scope.$on('$ionicView.enter', function(){
     $scope.openScanner();
   });
@@ -19,14 +19,18 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
       if (promise.data.success === 1) {
         if (window.cordova) {
           $ionicPlatform.ready(function() {
-          	
-            if (promise.data.item.volume || promise.data.item.alcohol) {
-              $cordovaNativeAudio.play("open");
-            } else {
-              $cordovaNativeAudio.play("eating");
+            if (SettingsService.getSettings().allowAudio) {
+              if ((promise.data.item.volume || promise.data.item.alcohol) && (promise.data.item.volume !== "0" || promise.data.item.alcohol !== "0")) {
+                  $cordovaNativeAudio.play("open");
+              } else {
+                $cordovaNativeAudio.play("eating");
+              }
             }
 
-            $cordovaVibration.vibrate(100);
+            if (SettingsService.getSettings().allowVibration) {
+              $cordovaVibration.vibrate(100); 
+            }
+
             $state.go('tab.feed');
           });
         }

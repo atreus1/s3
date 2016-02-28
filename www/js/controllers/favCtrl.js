@@ -24,7 +24,11 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
   }
 
   if (window.localStorage["items"]) {
-    $scope.items = JSON.parse(window.localStorage["items"]);
+    if (SettingsService.getSettings.cacheData) {
+      $scope.items = JSON.parse(window.localStorage["items"]);
+    } else {
+      window.localStorage["items"] = "";
+    }
   }
 
   $scope.isSelected = function(item) {
@@ -92,16 +96,16 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
       if (promise.data.success === 1) {
         if (window.cordova) {
           $ionicPlatform.ready(function() {
-          	if (SettingsService.getSettings().allowAudio) {
-            	if ((item.volume || item.alcohol) && (item.volume !== "0" || item.alcohol !== "0")) {
-              		$cordovaNativeAudio.play("open");
-            	} else {
-              		$cordovaNativeAudio.play("eating");
-            	}
+            if (SettingsService.getSettings().allowAudio) {
+              if ((item.volume || item.alcohol) && (item.volume !== "0" || item.alcohol !== "0")) {
+                  $cordovaNativeAudio.play("open");
+              } else {
+                $cordovaNativeAudio.play("eating");
+              }
             }
 
             if (SettingsService.getSettings().allowVibration) {
-            	$cordovaVibration.vibrate(100);	
+              $cordovaVibration.vibrate(100);	
             }
             
             $scope.deselect(thisItem);
@@ -170,7 +174,9 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
         });
 
         // Save for cache
-        window.localStorage["items"] = JSON.stringify($scope.items);
+        if (SettingsService.getSettings.cacheData) {
+          window.localStorage["items"] = JSON.stringify($scope.items);
+        }
       }
     });    
   }

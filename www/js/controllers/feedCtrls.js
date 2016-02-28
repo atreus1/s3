@@ -1,12 +1,15 @@
 var app = angular.module('starter.controllers');
 
-app.controller('FeedCtrl', function($scope, ionicMaterialMotion, ionicMaterialInk, DBService) {
-  // Cache the old feed
+app.controller('FeedCtrl', function($scope, DBService, SettingsService) {
   $scope.feed = {};
 
   if (window.localStorage["feed"]) {
-    $scope.feed = JSON.parse(window.localStorage["feed"]);
-  }  
+    if (SettingsService.getSettings.cacheData) {
+      $scope.feed = JSON.parse(window.localStorage["feed"]);
+    } else {
+      window.localStorage["feed"] = "";
+    }
+  }    
 
   function getColor() {
     var color = ['#ED1176', '#E23227', '#086788', '#FF773D', '#87E752'];
@@ -40,7 +43,9 @@ app.controller('FeedCtrl', function($scope, ionicMaterialMotion, ionicMaterialIn
         $scope.feed = events;
 
         // Save for cache
-        window.localStorage["feed"] = JSON.stringify(events);
+        if (SettingsService.getSettings.cacheData) {
+          window.localStorage["feed"] = JSON.stringify(events);
+        }        
       }
     }).finally(function() {
       // Stop the ion-refresher from spinning

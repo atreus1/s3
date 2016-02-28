@@ -187,7 +187,7 @@ app.controller('ProfileCtrl', function($scope, DBService) {
     loading: false
   }
 
-  $scope.week = function(year,month,day) {
+  function getWeek(year,month,day) {
       function serial(days) { return 86400000*days; }
       function dateserial(year,month,day) { return (new Date(year,month-1,day).valueOf()); }
       function weekday(date) { return (new Date(date)).getDay()+1; }
@@ -200,10 +200,13 @@ app.controller('ProfileCtrl', function($scope, DBService) {
   //$scope.lobScore = [];  
 
   $scope.doRefresh = function() {
-    var sendData = {'tag':'getLobareWeekData', 'week':$scope.week(new Date())};
+    var sendData = {'tag':'getLobareWeekData', 'week':getWeek(new Date())};
     console.log(sendData);
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
+        if ($scope.chartLobare.series.length > 0) {
+          $scope.chartLobare.series = [];
+        }
         $scope.lobare = promise.data.result; 
         console.log($scope.lobare);
 
@@ -239,7 +242,7 @@ app.controller('ProfileCtrl', function($scope, DBService) {
       }
     });
 
-    var sendData = {'tag':'getWeekData', 'user_id': window.localStorage['user_id'], 'week':$scope.week(new Date())};
+    var sendData = {'tag':'getWeekData', 'user_id': window.localStorage['user_id'], 'week':getWeek(new Date())};
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
         $scope.week = promise.data.days; 

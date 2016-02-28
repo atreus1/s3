@@ -16,7 +16,7 @@
         <i class="icon ion-ios-arrow-right"></i>
       </a>
     </div>    
-    <div class="list card">
+    <div class="list card" style="margin-top: 40px;">
       <a class="item item-icon-right" href="#/tab/settings/email">
         <p class="dark">Ändra email</p>
         <i class="icon ion-ios-arrow-right"></i>
@@ -34,7 +34,7 @@
         <i class="icon ion-ios-arrow-right"></i>
       </a>
     </div>
-    <div class="list card">
+    <div class="list card" style="margin-top: 40px;">
       <div class="item item-toggle">
         <p class="dark">Ljud vid köp</p>
         <label class="toggle">
@@ -55,7 +55,24 @@
           </div>
         </label>
       </div>
-    </div>    
-    <button class="button button-block button-assertive ink" style="margin-bottom: 40px;" ng-click="logout()">Logga ut</button>
+    </div>
+    <div class="list card">
+      <div class="item item-toggle">
+        <p class="dark">Cacha data för prestanda</p>
+        <label class="toggle">
+          <input type="checkbox" ng-model="settings.cacheData" ng-change="updateSetting('cacheData')">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </div>
+    </div>        
+    <button class="button button-block button-assertive ink" style="margin-top: 40px;" ng-click="logout()">Logga ut</button>
+
+    <!-- Ugly, but simple bugfix: -->
+    <div class="list card" style="opacity: 0">
+      <div class="item">
+      </div>
+    </div>     
   </ion-content>
 </ion-view>
