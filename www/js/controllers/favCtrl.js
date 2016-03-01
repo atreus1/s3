@@ -1,7 +1,7 @@
 var app = angular.module('starter.controllers');
 
 app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ionicPopup, DBService, SettingsService, $cordovaVibration, $cordovaNativeAudio) {
-  $scope.items = {};
+  $scope.items = [];
   $scope.taps = 0;
   $scope.query = {}
   var locked = false;
@@ -25,7 +25,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
 
   if (window.localStorage["items"]) {
     if (SettingsService.getSettings.cacheData) {
-      $scope.items = JSON.parse(window.localStorage["items"]);
+      $scope.items = JSON.parse(window.localStorage["items"]);      
     } else {
       window.localStorage["items"] = "";
     }
@@ -155,7 +155,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
           }
         }
 
-        console.log(itemsArray);
+        //console.log(itemsArray);
 
         // Sort the array. (Angular sort did not work so I'm using this one instead)
         itemsArray.sort(function(a, b) {
@@ -174,7 +174,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
         });
 
         // Save for cache
-        if (SettingsService.getSettings.cacheData) {
+        if (SettingsService.getSettings().cacheData) {
           window.localStorage["items"] = JSON.stringify($scope.items);
         }
       }
