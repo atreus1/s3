@@ -167,9 +167,9 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
         allItems = itemsArray;
         $scope.items = itemsArray;
         angular.forEach($scope.items, function(c) {
-          if (!c.image) {
-            c.image = getColor();            
-          }
+          // if (!c.image) {
+          //   c.image = getColor();            
+          // }
           c.count = 0;
         });
 

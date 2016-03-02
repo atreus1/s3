@@ -8,19 +8,16 @@
     </div>
     <div class="list no-padding">
       <div class="card clear-bg" ng-repeat="i in items | filter: query.text:strict" on-tap="onTap(i)" ng-style="isSelected(i) ? {} : passiveStyle" ng-cloak>
-        <a class="item dark-bg item-bg-image item-text-wrap" style="background: url('{{i.image}}') center no-repeat; background-size: 100%;">
+        <a class="item dark-bg item-bg-image item-text-wrap" ng-style="i.image ? {'background': 'url({{i.image}}) center no-repeat', 'background-size': '100%'} : {'background-color': '#444444', 'background-size': '100%'}">
           <h2 ng-bind="i.name"></h2>
           <span class="badge badge-assertive" ng-show="i.count" ng-bind="i.count"></span>
           <div class="card-footer">
-            <!-- <div style="display: block; background-color: black; height: 20px;"> -->
-              <p ng-show="i.amount" style="position: absolute; float:left;">#{{i.amount}} - {{i.price}}kr</p>  
-            <!-- </div> -->
-            
+            <p ng-show="i.amount" style="position: absolute; float:left;">#{{i.amount}} - {{i.price}}kr</p>  
           </div>
         </a>
       </div>
     </div>    
   </ion-content>
-  <button id="fab-profile" class="button button-fab deleteFab button-light fabShow ng-cloak ng-hide" ng-click="deselect()" ng-show="!isSelected()"><i class="icon ion-close"></i></button>
+  <button id="fab-profile" class="button button-fab deleteFab button-assertive fabShow ng-cloak ng-hide" ng-click="deselect()" ng-show="!isSelected()"><i class="icon ion-close"></i></button>
   <button id="fab-profile" class="button button-fab buyFab button-royal-900 fabShow ng-cloak ng-hide" ng-click="checkOut()" ng-show="!isSelected()"><i class="icon ion-ios-cart"></i></button>
 </ion-view>

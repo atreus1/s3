@@ -33,35 +33,6 @@ p {
   margin-top: 10px;
 }
 
-.login-container {
-    background: url("../img/login.jpg") no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-}
-
-.id-container {
-    background: url("../img/alc1.jpg") no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-}
-
-.register-container {
-    background: url("../img/alc2.jpg") no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-}
-
-.reset-container {
-    background: url("../img/alc2.jpg") no-repeat center center fixed; 
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-}
-
-
 .center {
   -webkit-align-content: stretch;
   -webkit-align-items: center;
@@ -119,39 +90,14 @@ div.spinner {
  /* bottom: 65px;*/
 }
 
-.fabShow.ng-hide-add, .fabShow.ng-hide-remove {
+/*.fabShow.ng-hide-add, .fabShow.ng-hide-remove {
   transition: all linear 0.2s;
-}
+}*/
 
 .fabShow.ng-hide {
   /*bottom: -20px;*/
   opacity: 0;
 }
-
-
-/* Feed avatar
-===================================*/
-
-.item-avatar .pink {
-  background: #ff80ab; }
-.item-avatar .green {
-  background: #b9f6ca; }
-.item-avatar .blue {
-  background: #84ffff; }
-.item-avatar .purple {
-  background: #b388ff; }
-
-  /* Fav avatar
-===================================*/
-
-.ink .pink {
-  background: #ff80ab; }
-.ink .green {
-  background: #b9f6ca; }
-.ink .blue {
-  background: #84ffff; }
-.ink .purple {
-  background: #b388ff; }
 
 .dark-bg h2 {
   height: 70px;

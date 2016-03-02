@@ -11,12 +11,6 @@ app.controller('FeedCtrl', function($scope, DBService, SettingsService) {
     }
   }    
 
-  function getColor() {
-    var color = ['#ED1176', '#E23227', '#086788', '#FF773D', '#87E752'];
-    color = color[Math.floor(Math.random()*color.length)];
-    return color;
-  }
-      
   var sendData = {'tag':'getFeed'};
   $scope.doRefresh = function() {
     
@@ -31,12 +25,8 @@ app.controller('FeedCtrl', function($scope, DBService, SettingsService) {
             c.multi = c.multi-(c.comments-1);
           }
 
-          if (!c.image) {
-            c.image = getColor();
-          } else {
-            if (c.image === "local") {
-              c.image = "img/items/"+c.item_id+".jpg";
-            }
+          if (c.image && c.image === "local") {
+            c.image = "img/items/"+c.item_id+".jpg";
           }
         });
 

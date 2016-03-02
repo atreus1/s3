@@ -1,7 +1,8 @@
-<ion-view hide-nav-bar="true" hide-back-button="true" view-title="Logga in" class="login-container">
+<ion-view hide-nav-bar="true" hide-back-button="true" view-title="Logga in">
+  <img ng-src="img/drink-beer.jpg" style="position: fixed; width: auto; height: 100%;">
   <ion-content scroll="false" class="padding">
     <div class="col header text-center">
-       <h1 style="margin-top:120px;">streck.app</h1>
+       <h1 style="margin-top:120px;">streckbase</h1>
     </div>  
     <form class="list">
       <ion-list>
@@ -13,9 +14,9 @@
         </label>
       </ion-list>
       <div class="spacer" style="height: 40px;"></div>
-      <button class="button button-positive button-block button-large" ng-disabled="!user.email || !user.password" ng-click="login()">Logga in</button>
+      <button class="button button-royal-900 button-block button-large" ng-disabled="!user.email || !user.password" ng-click="login()">Logga in</button>
     </form>
-    <a href="#/id" class="button button-light button-clear button-block ">Ny användare</a>
-    <a href="#/reset" class="button button-light button-clear button-block ">Glömt lösenord?</a>    
+    <a href="#/id" class="button button-stable button-clear ">Ny användare</a>
+    <a href="#/reset" class="button button-stable button-clear ">Glömt lösenord?</a>    
   </ion-content>
 </ion-view>
