@@ -4,7 +4,7 @@ app.controller('LoginCtrl', function($scope, $ionicPopup, $state, DBService) {
 
   $scope.$on('$ionicView.loaded', function() {
     // Check if user is already logged in
-    if(window.localStorage['email'] && window.localStorage['last_login']) {
+    if (window.localStorage['email'] && window.localStorage['last_login']) {
       var last_login = moment(new Date(window.localStorage['last_login']));
       var now = moment(new Date());
       var diff = Math.abs(last_login.diff(now, 'days'));

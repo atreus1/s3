@@ -23,7 +23,9 @@ angular.module('starter', ['ionic','starter.controllers','starter.services','ngC
         // Set event handler to check which Quick Action was pressed
         window.ThreeDeeTouch.onHomeIconPressed = function(payload) {
           if (payload.type == 'favorites') {
-            $state.go('tab.fav');
+            if (window.localStorage['email']) {
+              $state.go('tab.fav');
+            }
           } else {
             $rootScope.$broadcast('buyFavorite', payload.type);
           }

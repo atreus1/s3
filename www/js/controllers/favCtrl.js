@@ -218,15 +218,19 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ro
   });
 
   $rootScope.$on('buyFavorite', function(event, id) {
-    for (var i = 0; i < $scope.items.length; i++) {
-      if ($scope.items[i].id === id) {
-        var favItem = $scope.items[i];
-        favItem.count = 1;
+    if (window.localStorage['email']) {
+      for (var i = 0; i < $scope.items.length; i++) {
+        if ($scope.items[i].id === id) {
+          var favItem = $scope.items[i];
+          favItem.count = 1;
 
-        $scope.buy(favItem);
-        favItem.count = 0;        
-        break;
+          $scope.buy(favItem);
+          favItem.count = 0;        
+          break;
+        }
       }
+    } else {
+      $state.go('login');
     }
   });  
 });
