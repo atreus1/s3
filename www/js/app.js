@@ -6,84 +6,39 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic','starter.controllers','starter.services','ngCordova','highcharts-ng','ionic-material'])
 
-.run(function($ionicPlatform, $rootScope) {
+.run(function($ionicPlatform, ThreeDeeService, $state, $rootScope) {
 
   $ionicPlatform.ready(function() {
-       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true); // not working ?!!!!
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
     }
     if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
 
-    // // PUSH!
-    //   $rootScope.$on('$cordovaPush:tokenReceived', function(event, data) {
-    //     $rootScope.deviceToken = data.token;
-    //     console.log('Ionic Push: Got token ', data.token, data.platform);
-    //   });
-
-    
-    //  var user = $ionicUser.get();
-    //  if(!user.user_id) {
-    //   user.user_id = $ionicUser.generateGUID();
-    //  };
-
-    // // Add some metadata to your user object.
-    // angular.extend(user, {
-    //   name: 'Ionitron',
-    //   bio: 'I come from planet Ion'
-    // });
-
-    // // Identify your user with the Ionic User Service
-    // $ionicUser.identify(user)
-    
-    // // Register with the Ionic Push service.  All parameters are optional.
-    // $ionicPush.register({
-    //   canShowAlert: true, //Can pushes show an alert on your screen?
-    //   canSetBadge: true, //Can pushes update app icon badges?
-    //   canPlaySound: true, //Can notifications play a sound?
-    //   canRunActionsOnWake: true, //Can run actions outside the app,
-    //   onNotification: function(notification) {
-    //     // Handle new push notifications here
-    //     console.log(notification);
-    //     return true;
-    //   }
-    // });
-
+    //ThreeDeeService.setup();
+    ThreeDeeService.check3DTouchAvailability().then(function(available) {
+      if (available) {
+        // Set event handler to check which Quick Action was pressed
+        window.ThreeDeeTouch.onHomeIconPressed = function(payload) {
+          if (payload.type == 'favorites') {
+            $state.go('tab.fav');
+          } else {
+            $rootScope.$broadcast('buyFavorite', payload.type);
+          }
+        };        
+      }
+    });
   });
 })
 
-// .config(['$ionicAppProvider', function($ionicAppProvider) {
-//   // Identify app
-//   $ionicAppProvider.identify({
-//     // The App ID (from apps.ionic.io) for the server
-//     app_id: 'f0257d87',
-//     // The public API key all services will use for this app
-//     api_key: 'a86e32f0c28df276b06483b17aab1be303facb9f118e5d76',
-//     // Set the app to use development pushes
-//     dev_push: false
-//   });
-// }])
-
-
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
-
-  
-
-  // Turn off caching for demo simplicity's sake
-  //$ionicConfigProvider.views.maxCache(0);
-
   // Turn off back button text
   $ionicConfigProvider.backButton.text('').previousTitleText(false);
   $ionicConfigProvider.tabs.position('bottom');
   
-
   $stateProvider
-
   .state('login', {
     url: '/login',
     templateUrl: 'templates/login.html',
@@ -212,6 +167,5 @@ angular.module('starter', ['ionic','starter.controllers','starter.services','ngC
     }
   });
 
-  // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/login');
 });

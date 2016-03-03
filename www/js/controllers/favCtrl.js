@@ -1,12 +1,13 @@
 var app = angular.module('starter.controllers');
 
-app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ionicPopup, DBService, SettingsService, $cordovaVibration, $cordovaNativeAudio) {
+app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $rootScope, $ionicPopup, DBService, SettingsService, $cordovaVibration, $cordovaNativeAudio, ThreeDeeService) {
   $scope.items = [];
   $scope.taps = 0;
-  $scope.query = {}
-  var locked = false;
+  $scope.query = {};  
   var allItems = {};
   var thisItem;
+  var is3DbuttonsSet = false;
+
   $scope.passiveStyle = {
     "-webkit-filter": "blur(6px)",
     "-moz-filter": "blur(6px)",
@@ -119,11 +120,11 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
     });    
   }
 
-  function getColor() {
-    var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
-    color = color[Math.floor(Math.random()*color.length)];
-    return "/img/" + color;
-  }  
+  // function getColor() {
+  //   var color = ['green.jpg', 'blue.jpg', 'purple.jpg'];
+  //   color = color[Math.floor(Math.random()*color.length)];
+  //   return "/img/" + color;
+  // }  
 
   $scope.doRefresh = function() {
     var sendData = {'tag':'getAllItems', 'user_id':window.localStorage['user_id']};
@@ -167,15 +168,46 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
         allItems = itemsArray;
         $scope.items = itemsArray;
         angular.forEach($scope.items, function(c) {
-          // if (!c.image) {
-          //   c.image = getColor();            
-          // }
           c.count = 0;
         });
+
+        //console.log($scope.items);
 
         // Save for cache
         if (SettingsService.getSettings().cacheData) {
           window.localStorage["items"] = JSON.stringify($scope.items);
+        }
+
+        if (!is3DbuttonsSet && $scope.items.length > 0) {
+          ThreeDeeService.setup(
+            [
+              {
+                type: 'favorites',
+                title: 'Gå till favoriter',
+                subtitle: '',
+                iconType: 'favorite'
+              },
+              {
+                type: '3',
+                title: 'Strecka Pripps Blå',
+                subtitle: '',
+                iconType: 'add'
+              },
+              {
+                type: '4',
+                title: 'Strecka G:N Long Drink',
+                subtitle: '',
+                iconType: 'add'
+              },
+              {
+                type: '6',
+                title: 'Strecka Powerking',
+                subtitle: '',
+                iconType: 'add'
+              }
+            ]
+          );
+          is3DbuttonsSet = true;
         }
       }
     });    
@@ -184,4 +216,17 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $io
   $scope.$on('$ionicView.loaded', function(){
     $scope.doRefresh();
   });
+
+  $rootScope.$on('buyFavorite', function(event, id) {
+    for (var i = 0; i < $scope.items.length; i++) {
+      if ($scope.items[i].id === id) {
+        var favItem = $scope.items[i];
+        favItem.count = 1;
+
+        $scope.buy(favItem);
+        favItem.count = 0;        
+        break;
+      }
+    }
+  });  
 });

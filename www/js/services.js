@@ -58,3 +58,31 @@ app.factory('DBService', function($http, $ionicPopup) {
     }
   };
 });
+
+app.factory('ThreeDeeService', function($q) {
+  var isAvailable = false;
+
+  function check3DTouchAvailability() {
+    return $q(function(resolve, reject) {              
+      if (window.ThreeDeeTouch) {
+        window.ThreeDeeTouch.isAvailable(function(available) {
+          isAvailable = true;
+          resolve(available);
+        });
+      } else {
+        reject();
+      }
+    });
+  };
+  function setup(array) {
+    if (isAvailable) {
+
+      // Configure Quick Actions
+      window.ThreeDeeTouch.configureQuickActions(array);
+    }
+  };
+  return {
+    check3DTouchAvailability,
+    setup
+  };
+});
