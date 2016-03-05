@@ -7,13 +7,13 @@
     <form class="list">
       <ion-list>
         <label class="item item-input inputField">
-          <input style="color:white;" type="email" placeholder="Email" ng-model="user.email">
+          <input style="color:white;" type="email" ng-enter placeholder="Email" ng-model="user.email">
         </label>
         <label class="item item-input inputField">
-          <input style="color:white;" type="password" placeholder="Lösenord" ng-model="user.password">
+          <input style="color:white;" type="password" ng-enter placeholder="Lösenord" ng-model="user.password">
         </label>
         <label class="item item-input inputField">
-          <input style="color:white;" type="password" placeholder="Repetera lösenord" ng-model="user.repeat_password">
+          <input style="color:white;" type="password" ng-enter placeholder="Repetera lösenord" ng-model="user.repeat_password">
         </label>
       </ion-list>
       <button class="button button-royal-900 button-block button-large" ng-disabled="!user.email || !user.password || !user.repeat_password" ng-click="register()">Registrera</button>
