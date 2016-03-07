@@ -75,7 +75,7 @@ app.controller('PurchasesCtrl', function($scope, $ionicPopup, DBService) {
       console.log(promise.data);
       $scope.myPurchases = promise.data.purchases;
       angular.forEach($scope.myPurchases, function(c) {
-        c.date = new Date(c.date);
+        c.date = moment(c.date, "YYYY-MM-DD HH:mm:ss").toDate();
         c.datediff = moment(c.date).diff(moment(new Date), 'days');
         c.hourdiff = Math.abs(moment(c.date).diff(moment(new Date), 'hours'));
       });

@@ -19,7 +19,7 @@ app.controller('FeedCtrl', function($scope, DBService, SettingsService) {
         var events = promise.data.feed;
 
         angular.forEach(events, function(c) {
-          c.date = new Date(c.date);
+          c.date = moment(c.date, "YYYY-MM-DD HH:mm:ss").toDate();
           c.datediff = moment(c.date).diff(moment(new Date), 'days');
           if (c.comments > 0) {
             c.multi = c.multi-(c.comments-1);
@@ -69,8 +69,11 @@ app.controller('ViewCommentsCtrl', function($scope, $stateParams, DBService) {
     var sendData = {'tag':"getComments", 'id':$stateParams.event_id};
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
-        console.log(promise.data.event);
+        //console.log(promise.data.event);
         $scope.event = promise.data.event;
+        angular.forEach($scope.event, function(c) {
+          c.date = moment(c.date, "YYYY-MM-DD HH:mm:ss").toDate();
+        });
       }
     });
   }
