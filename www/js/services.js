@@ -19,20 +19,16 @@ app.factory('SettingsService', function() {
       "allowVibration": parsed.allowVibration
     };    
   }
-
-  function getSettings() {
-    //console.log("returning settings",settings);
-    return settings;
-  };
-  function updateSettings(key, value) {
-    settings[key] = value;
-    window.localStorage['settings'] = JSON.stringify(settings);
-  };
-
+  
   return {
-    getSettings,
-    updateSettings
-  };
+    getSettings: function() {
+      return settings;
+    },
+    updateSettings: function(key, value) {
+      settings[key] = value;
+      window.localStorage['settings'] = JSON.stringify(settings);
+    }
+  }
 });
 
 app.factory('DBService', function($http, $ionicPopup) {
