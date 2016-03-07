@@ -59,7 +59,7 @@ app.factory('ThreeDeeService', function($q) {
   var isAvailable = false;
 
   return {
-    function check3DTouchAvailability() {
+    check3DTouchAvailability: function() {
       return $q(function(resolve, reject) {              
         if (window.ThreeDeeTouch) {
           window.ThreeDeeTouch.isAvailable(function(available) {
@@ -71,7 +71,7 @@ app.factory('ThreeDeeService', function($q) {
         }
       });
     },
-    function setup(array) {
+    setup: function(array) {
       if (isAvailable) {
         // Configure Quick Actions
         window.ThreeDeeTouch.configureQuickActions(array);
