@@ -19,7 +19,7 @@ app.controller('FeedCtrl', function($scope, DBService, SettingsService) {
         var events = promise.data.feed;
 
         angular.forEach(events, function(c) {
-          c.date = new Date(c.date*1000);
+          c.date = new Date(c.date);
           c.datediff = moment(c.date).diff(moment(new Date), 'days');
           if (c.comments > 0) {
             c.multi = c.multi-(c.comments-1);
