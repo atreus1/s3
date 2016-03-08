@@ -6,6 +6,7 @@ app.controller('SettingsCtrl', function($scope, $state, DBService, SettingsServi
   $scope.settings.cacheData = storedSettings.cacheData;
   $scope.settings.allowAudio = storedSettings.allowAudio;
   $scope.settings.allowVibration = storedSettings.allowVibration;
+  $scope.ios = ionic.Platform.isIOS();
 
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.getUserDebt();
@@ -51,7 +52,7 @@ app.controller('PurchasesCtrl', function($scope, $ionicPopup, DBService) {
       okText: 'Ja'
     }).then(function(res) {
       if(res) {
-        console.log("delete event "+ purchase_id + " " + count);
+        //console.log("delete event "+ purchase_id + " " + count);
         var sendData = {'tag':"deletePurchase", 'item_id':purchase_id, 'count':count, 'price':price, 'user_id': window.localStorage['user_id']};
         DBService.sendToDB(sendData, false).then(function(promise) {
           if (promise.data.success === 1) {
@@ -72,7 +73,7 @@ app.controller('PurchasesCtrl', function($scope, $ionicPopup, DBService) {
 
   DBService.sendToDB(sendData, false).then(function(promise) {
     if (promise.data.success === 1) {
-      console.log(promise.data);
+      //console.log(promise.data);
       $scope.myPurchases = promise.data.purchases;
       angular.forEach($scope.myPurchases, function(c) {
         c.date = moment(c.date, "YYYY-MM-DD HH:mm:ss").toDate();
@@ -179,7 +180,7 @@ app.controller('NewItemCtrl', function($scope, $state, $stateParams, $ionicPopup
       'alcohol':$scope.item.alcohol,
       'barcode':$scope.item.barcode
     };
-    console.log(sendData);
+    //console.log(sendData);
     DBService.sendToDB(sendData, true).then(function(promise) {
       if (promise.data.success === 1) {
         $ionicPopup.alert({

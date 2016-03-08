@@ -36,20 +36,20 @@
     </div>
     <div class="list card" style="margin-top: 40px;">
       <div class="item item-toggle">
-        <p class="dark">Ljud vid köp</p>
+        <p class="dark">Vibration vid köp</p>
         <label class="toggle">
-          <input type="checkbox" ng-model="settings.allowAudio" ng-change="updateSetting('allowAudio')">
+          <input type="checkbox" ng-model="settings.allowVibration" ng-change="updateSetting('allowVibration')">
           <div class="track">
             <div class="handle"></div>
           </div>
         </label>
       </div>
-    </div>
-    <div class="list card">
+    </div>    
+    <div class="list card" ng-show="ios">
       <div class="item item-toggle">
-        <p class="dark">Vibration vid köp</p>
+        <p class="dark">Ljud vid köp</p>
         <label class="toggle">
-          <input type="checkbox" ng-model="settings.allowVibration" ng-change="updateSetting('allowVibration')">
+          <input type="checkbox" ng-model="settings.allowAudio" ng-change="updateSetting('allowAudio')">
           <div class="track">
             <div class="handle"></div>
           </div>

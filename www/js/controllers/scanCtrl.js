@@ -5,7 +5,7 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
     $scope.openScanner();
   });
 
-  if (window.cordova) {
+  if (window.cordova && ionic.Platform.isIOS()) {
     $ionicPlatform.ready(function() {
       $cordovaNativeAudio.preloadSimple("open", "audio/open.mp3");
       $cordovaNativeAudio.preloadSimple("eating", "audio/eating.mp3");
@@ -19,7 +19,7 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
       if (promise.data.success === 1) {
         if (window.cordova) {
           $ionicPlatform.ready(function() {
-            if (SettingsService.getSettings().allowAudio) {
+            if (SettingsService.getSettings().allowAudio && ionic.Platform.isIOS()) {
               if ((promise.data.item.volume || promise.data.item.alcohol) && (promise.data.item.volume !== "0" || promise.data.item.alcohol !== "0")) {
                   $cordovaNativeAudio.play("open");
               } else {
