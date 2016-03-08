@@ -1,6 +1,6 @@
 var app = angular.module('starter.controllers');
 
-app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicHistory, $state, DBService, SettingsService, $cordovaVibration, $cordovaFlashlight, $cordovaNativeAudio) {
+app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicHistory, $state, DBService, SettingsService, $cordovaVibration, $cordovaNativeAudio) {
   $scope.$on('$ionicView.enter', function(){
     $scope.openScanner();
   });
@@ -64,30 +64,39 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
   $scope.openScanner = function() {
     if (window.cordova) {
       var avail;    
-      $ionicPlatform.ready(function() {      
-        $cordovaFlashlight.available().then(function(availability) {
-          avail = availability; // is available
-          $cordovaFlashlight.switchOn();
-        }, function () {
-          avail = false;
-        }); 
+      $ionicPlatform.ready(function() {
+        window.plugins.flashlight.available(function(isAvailable) {
+          if (isAvailable) {
+            window.plugins.flashlight.switchOn();
+          }
+        });
+        // $cordovaFlashlight.available().then(function(availability) {
+        //   avail = availability; // is available
+        //   $cordovaFlashlight.switchOn();
+        // }, function () {
+        //   avail = false;
+        // }); 
 
         cordova.plugins.barcodeScanner.scan(
           function (result) {
+            window.plugins.flashlight.available(function(isAvailable) {
+              if (isAvailable) {
+                window.plugins.flashlight.switchOff();
+              }
+            });
             if (result.cancelled) {
               $ionicHistory.goBack(-1);
             } else {
               $scope.buy(result.text);
-            }
-            if (avail) {
-              $cordovaFlashlight.switchOff();
-            }          
+            }         
           }, 
           function (error) {
             console.log("Issue with barcode scanner within app");
-            if (avail) {
-              $cordovaFlashlight.switchOff();
-            }          
+            window.plugins.flashlight.available(function(isAvailable) {
+              if (isAvailable) {
+                window.plugins.flashlight.switchOff();
+              }
+            });        
             $ionicHistory.goBack(-1);
           }
         );
