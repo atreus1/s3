@@ -6,7 +6,6 @@ app.controller('SettingsCtrl', function($scope, $state, DBService, SettingsServi
   $scope.settings.cacheData = storedSettings.cacheData;
   $scope.settings.allowAudio = storedSettings.allowAudio;
   $scope.settings.allowVibration = storedSettings.allowVibration;
-  $scope.ios = ionic.Platform.isIOS();
 
   $scope.$on('$ionicView.beforeEnter', function() {
     $scope.getUserDebt();

@@ -5,7 +5,7 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
     $scope.openScanner();
   });
 
-  if (window.cordova && ionic.Platform.isIOS()) {
+  if (window.cordova) {
     $ionicPlatform.ready(function() {
       $cordovaNativeAudio.preloadSimple("open", "audio/open.mp3");
       $cordovaNativeAudio.preloadSimple("eating", "audio/eating.mp3");
@@ -19,7 +19,7 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
       if (promise.data.success === 1) {
         if (window.cordova) {
           $ionicPlatform.ready(function() {
-            if (SettingsService.getSettings().allowAudio && ionic.Platform.isIOS()) {
+            if (SettingsService.getSettings().allowAudio) {
               if ((promise.data.item.volume || promise.data.item.alcohol) && (promise.data.item.volume !== "0" || promise.data.item.alcohol !== "0")) {
                   $cordovaNativeAudio.play("open");
               } else {
@@ -65,20 +65,16 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
     if (window.cordova) {
       $ionicPlatform.ready(function() {
         window.plugins.flashlight.available(function(isAvailable) {
-          if (ionic.Platform.isIOS()) {
-            if (isAvailable) {
-              window.plugins.flashlight.switchOn();
-            }
+          if (isAvailable) {
+            window.plugins.flashlight.switchOn();
           }
         });
 
         cordova.plugins.barcodeScanner.scan(
           function (result) {
             window.plugins.flashlight.available(function(isAvailable) {
-              if (ionic.Platform.isIOS()) {
-                if (isAvailable) {
-                  window.plugins.flashlight.switchOff();
-                }
+              if (isAvailable) {
+                window.plugins.flashlight.switchOff();
               }
             });
             if (result.cancelled) {
@@ -90,10 +86,8 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
           function (error) {
             console.log("Issue with barcode scanner within app");
             window.plugins.flashlight.available(function(isAvailable) {
-              if (ionic.Platform.isIOS()) {
-                if (isAvailable) {
-                  window.plugins.flashlight.switchOff();
-                }
+              if (isAvailable) {
+                window.plugins.flashlight.switchOff();
               }
             });        
             $ionicHistory.goBack(-1);

@@ -17,7 +17,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ro
     "opacity": "0.5"
   }
 
-  if (window.cordova && ionic.Platform.isIOS()) {
+  if (window.cordova) {
     $ionicPlatform.ready(function() {
       $cordovaNativeAudio.preloadSimple("open", "audio/open.mp3");
       $cordovaNativeAudio.preloadSimple("eating", "audio/eating.mp3");
@@ -97,7 +97,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ro
       if (promise.data.success === 1) {
         if (window.cordova) {
           $ionicPlatform.ready(function() {
-            if (SettingsService.getSettings().allowAudio && ionic.Platform.isIOS()) {
+            if (SettingsService.getSettings().allowAudio) {
               if ((item.volume || item.alcohol) && (item.volume !== "0" || item.alcohol !== "0")) {
                 $cordovaNativeAudio.play("open");
               } else {
