@@ -64,19 +64,23 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
   $scope.openScanner = function() {
     if (window.cordova) {
       $ionicPlatform.ready(function() {
-        window.plugins.flashlight.available(function(isAvailable) {
-          if (isAvailable) {
-            window.plugins.flashlight.switchOn();
-          }
-        });
+        if (!ionic.Platform.isAndroid()) {
+          window.plugins.flashlight.available(function(isAvailable) {
+            if (isAvailable) {
+              window.plugins.flashlight.switchOn();
+            }
+          });
+        }
 
         cordova.plugins.barcodeScanner.scan(
           function (result) {
-            window.plugins.flashlight.available(function(isAvailable) {
-              if (isAvailable) {
-                window.plugins.flashlight.switchOff();
-              }
-            });
+            if (!ionic.Platform.isAndroid()) {
+              window.plugins.flashlight.available(function(isAvailable) {
+                if (isAvailable) {
+                  window.plugins.flashlight.switchOff();
+                }
+              });
+            }
             if (result.cancelled) {
               $ionicHistory.goBack(-1);
             } else {
@@ -85,11 +89,13 @@ app.controller('ScanCtrl', function($scope, $ionicPlatform, $ionicPopup, $ionicH
           }, 
           function (error) {
             console.log("Issue with barcode scanner within app");
-            window.plugins.flashlight.available(function(isAvailable) {
-              if (isAvailable) {
-                window.plugins.flashlight.switchOff();
-              }
-            });        
+            if (!ionic.Platform.isAndroid()) {
+              window.plugins.flashlight.available(function(isAvailable) {
+                if (isAvailable) {
+                  window.plugins.flashlight.switchOff();
+                }
+              });
+            }
             $ionicHistory.goBack(-1);
           }
         );
