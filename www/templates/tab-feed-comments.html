@@ -13,7 +13,7 @@
     </div>
     <div class="card" style="background-color:none; box-shadow:none;">
       <label class="item item-input inputField">
-        <input style="color: white;" type="text" placeholder="Kommentera..." ng-model="comment.text">
+        <input style="color: white;" type="text" ng-enter placeholder="Kommentera..." ng-model="comment.text">
       </label>
     </div>
     <button class="button button-block button-royal-900" ng-disabled="!comment.text" ng-click="addComment();"> Lägg till</button>
