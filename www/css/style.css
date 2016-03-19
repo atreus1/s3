@@ -110,3 +110,18 @@ div.spinner {
 .dark-bg h2 {
   height: 70px;
 }
+
+.modalImage {
+  min-height: 120px;
+  max-height: 150px;
+  -webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+}
+
+.modalHeader {
+  color:#333333;
+  margin-bottom: 5px;
+}
+
+.modalList {
+  color: #555;
+}

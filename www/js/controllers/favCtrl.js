@@ -32,7 +32,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ro
     }
   }
 
-  $ionicModal.fromTemplateUrl('../templates/infoModal.html', {
+  $ionicModal.fromTemplateUrl('templates/infoModal.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
@@ -101,18 +101,32 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ro
     }
   }
 
-  $scope.showInfo = function() {
+  $scope.showInfo = function() {    
+    $scope.infoItem = {};
     $scope.modal.show();
-    $scope.infoItem = thisItem;
 
     var sendData = {'tag':'getItemInfo', 'item_id':thisItem.id};
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
-        console.log(promise.data);
+        var price = parseInt(thisItem.price);
+        var alc = thisItem.alcohol.replace(",", ".");
+        var vol = parseInt(thisItem.volume);
+        alc = (parseFloat(alc)/100)
+        
+        $scope.infoItem = promise.data.item;
+
+        $scope.infoItem.alcohol = thisItem.alcohol;
+        $scope.infoItem.amount = thisItem.amount;
+        $scope.infoItem.image = thisItem.image;
+        $scope.infoItem.name = thisItem.name;
+        $scope.infoItem.price = price;
+        $scope.infoItem.volume = vol;
+        $scope.infoItem.apk = (vol*alc/(price)).toFixed(2);
+        $scope.infoItem.corrJelz = (vol*alc/(0.375)).toFixed(2);        
+
+        console.log($scope.infoItem);
       }
     });
-
-    console.log(thisItem);
   }
 
   $scope.closeModal = function() {
