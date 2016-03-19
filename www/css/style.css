@@ -85,6 +85,14 @@ div.spinner {
   position: absolute;
 }
 
+.infoFab {
+  top: auto;
+  left: 16px;
+  right: auto;
+  bottom: 65px;
+  position: absolute;
+}
+
 .fabShow {
   opacity: 1;
  /* bottom: 65px;*/

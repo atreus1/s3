@@ -1,6 +1,6 @@
 var app = angular.module('starter.controllers');
 
-app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $rootScope, $ionicPopup, DBService, SettingsService, $cordovaVibration, $cordovaNativeAudio, ThreeDeeService) {
+app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $rootScope, $ionicModal, $ionicPopup, DBService, SettingsService, $cordovaVibration, $cordovaNativeAudio, ThreeDeeService) {
   $scope.items = [];
   $scope.taps = 0;
   $scope.query = {};  
@@ -32,12 +32,23 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ro
     }
   }
 
+  $ionicModal.fromTemplateUrl('../templates/infoModal.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });  
+
   $scope.isSelected = function(item) {
     if ($scope.selected) {
       return $scope.selected === item;  
     } else {
       return true;
     }
+  }
+
+  $scope.hasInfo = function() {
+    return (thisItem.info === "1");
   }
 
   $scope.$watch("query.text.name",function() {
@@ -90,6 +101,24 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ro
     }
   }
 
+  $scope.showInfo = function() {
+    $scope.modal.show();
+    $scope.infoItem = thisItem;
+
+    var sendData = {'tag':'getItemInfo', 'item_id':thisItem.id};
+    DBService.sendToDB(sendData, false).then(function(promise) {
+      if (promise.data.success === 1) {
+        console.log(promise.data);
+      }
+    });
+
+    console.log(thisItem);
+  }
+
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+    $scope.infoItem = null;
+  }
 
   $scope.buy = function(item) {
     var sendData = {'tag':'purchaseItem', 'user_id': window.localStorage['user_id'], 'item_id':item.id, 'count':item.count};
@@ -151,7 +180,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ro
             } else {
               img = objArray[key].image;
             }
-            itemsArray[index] = {id: objArray[key].id, amount: objArray[key].amount, name: objArray[key].name, price: objArray[key].price, volume: objArray[key].volume, alcohol: objArray[key].alcohol,  image: img}
+            itemsArray[index] = {id: objArray[key].id, amount: objArray[key].amount, name: objArray[key].name, price: objArray[key].price, volume: objArray[key].volume, alcohol: objArray[key].alcohol,  image: img, info: objArray[key].info}
             index++;
           }
         }

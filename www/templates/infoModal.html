@@ -1,0 +1,11 @@
+<ion-modal-view>
+  <ion-header-bar class="royal-900 bar bar-header disable-user-behavior" align-title="center">
+    <div class="title title-center header-item">{{infoItem.name}}</div>
+  </ion-header-bar>
+  <ion-content>
+    {{infoItem.alcohol}}%
+    {{infoItem.price}}kr
+    {{infoItem.volume}}cl
+  </ion-content>
+  <button id="fab-profile" class="button button-fab infoFab button-stable fabShow ng-cloak" ng-click="closeModal()"><i class="icon ion-close"></i></button>  
+</ion-modal-view>
