@@ -124,7 +124,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ro
         $scope.infoItem.apk = (vol*alc/(price)).toFixed(2);
         $scope.infoItem.corrJelz = (vol*alc/(0.375)).toFixed(2);        
 
-        console.log($scope.infoItem);
+        //console.log($scope.infoItem);
       }
     });
   }
@@ -132,6 +132,7 @@ app.controller('FavCtrl', function($scope, $state, $ionicPlatform, $timeout, $ro
   $scope.closeModal = function() {
     $scope.modal.hide();
     $scope.infoItem = null;
+    $scope.deselect();
   }
 
   $scope.buy = function(item) {
