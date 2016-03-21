@@ -152,6 +152,21 @@
                     $response["error_msg"]       = "Kunde inte hitta \"".$email."\"";
                 }
                 echo json_encode($response);
+            } else if ($tag == "getAllUsers") {
+                $users = $db->getAllUsers();
+
+                if ($users) {
+                    $response["success"]         = 1;
+                    // Loop through all users...
+                    foreach($users as $key => $value) {
+                        // ...and insert to JSON response string
+                        $response["user"][$key] = $value;
+                    }                    
+                } else {
+                    $response["error"]           = 1;
+                    $response["error_msg"]       = "Error finding users";
+                }
+                echo json_encode($response);
             } else if ($tag == "updatePassword") {
                 $hash = password_hash($password, PASSWORD_DEFAULT);
                 $updatePassword = $db->updatePassword($email, $hash);

@@ -93,6 +93,18 @@
             }
         }
 
+        public function getAllUsers() {
+            $query = "SELECT user_id, firstname, lastname, email, debt, block, lobare FROM Users";
+            $result = mysql_query($query) or die(mysql_error());
+            $array = array();
+
+            while ($temp = mysql_fetch_array($result, MYSQL_ASSOC)) {
+                // Add every user to array
+                array_push($array, $temp);
+            }
+            return ($array);
+        }
+
         public function setUsername($user_id, $name) {
             $query = "UPDATE Users SET name = '$name' WHERE user_id = '$user_id'";
             $result = mysql_query($query) or die(mysql_error());
