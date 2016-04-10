@@ -19,13 +19,13 @@
         "cordova-plugin-vibration": {
             "PACKAGE_NAME": "nu.tolva.streckbase"
         },
-        "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "nu.tolva.streckbase"
-        },
         "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "nu.tolva.streckbase"
         },
         "cordova-plugin-3dtouch": {
+            "PACKAGE_NAME": "nu.tolva.streckbase"
+        },
+        "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "nu.tolva.streckbase"
         }
     },

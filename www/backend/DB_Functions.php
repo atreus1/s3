@@ -323,9 +323,9 @@
 
         public function getProfile($user_id) {
         	if ($user_id) {
-            	$query = "SELECT u.firstname, u.lastname, u.debt, i.name, count(p.item_id) as sum, MAX(p.date) as date FROM Users u INNER JOIN Purchases p on u.user_id=p.user_id INNER JOIN Items i on p.item_id=i.item_id where u.user_id = '$user_id' group by p.item_id order by max(p.date) desc";
+            	$query = "SELECT u.firstname, u.lastname, u.debt, i.name, count(p.item_id) as sum, MAX(p.date) as date FROM Users u INNER JOIN Purchases p on u.user_id=p.user_id INNER JOIN Items i on p.item_id=i.item_id where u.user_id = '$user_id' group by p.item_id order by sum desc LIMIT 10";
             } else {
-            	$query = "SELECT u.firstname, u.lastname, u.debt, i.name, count(p.item_id) as sum, p.date FROM Users u INNER JOIN Purchases p on u.user_id=p.user_id INNER JOIN Items i on p.item_id=i.item_id group by p.item_id";
+            	$query = "SELECT u.firstname, u.lastname, u.debt, i.name, count(p.item_id) as sum, p.date FROM Users u INNER JOIN Purchases p on u.user_id=p.user_id INNER JOIN Items i on p.item_id=i.item_id group by p.item_id LIMIT 10";
             }
 
             $result = mysql_query($query) or die(mysql_error());
