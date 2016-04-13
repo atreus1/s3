@@ -223,7 +223,7 @@
         }
 
         public function getMyPurchases($user_id) {
-            $query = "SELECT p.id, p.item_id, i.name, i.price, i.volume, i.alcohol, i.image, p.date as date, count(p.date) as multi FROM Purchases p inner JOIN Items i ON i.item_id=p.item_id WHERE p.user_id = '$user_id' group by p.date order by date desc LIMIT 50";
+            $query = "SELECT p.id, p.item_id, i.name, i.price, i.volume, i.alcohol, i.image, p.date as date, count(p.date) as multi FROM Purchases p inner JOIN Items i ON i.item_id=p.item_id WHERE p.user_id = '$user_id' group by p.date order by p.id desc LIMIT 50";
             $result = mysql_query($query) or die(mysql_error());
             $array = array();
 
@@ -310,7 +310,7 @@
         }
         
         public function getComments($id) {
-            $query = "SELECT c.comment, c.date, u.firstname, u.lastname FROM Comments c INNER JOIN Users u ON c.user_id=u.user_id where event_id='$id' order by c.date asc";
+            $query = "SELECT c.comment, c.date, u.firstname, u.lastname FROM Comments c INNER JOIN Users u ON c.user_id=u.user_id where event_id='$id' order by c.id asc";
             $result = mysql_query($query) or die(mysql_error());
             $array = array();
 
@@ -323,7 +323,8 @@
 
         public function getProfile($user_id) {
         	if ($user_id) {
-            	$query = "SELECT u.firstname, u.lastname, u.debt, i.name, count(p.item_id) as sum, MAX(p.date) as date FROM Users u INNER JOIN Purchases p on u.user_id=p.user_id INNER JOIN Items i on p.item_id=i.item_id where u.user_id = '$user_id' group by p.item_id order by sum desc LIMIT 10";
+            	$query = "SELECT MAX(p.id), u.firstname, u.lastname, u.debt, i.name, count(p.item_id) as sum, (SELECT o.date FROM Purchases o WHERE o.id = MAX(p.id)) AS date FROM Users u INNER JOIN Purchases p on u.user_id=p.user_id INNER JOIN Items i on p.item_id=i.item_id where u.user_id = '$user_id' group by p.item_id order by MAX(p.id) desc LIMIT 10";
+
             } else {
             	$query = "SELECT u.firstname, u.lastname, u.debt, i.name, count(p.item_id) as sum, p.date FROM Users u INNER JOIN Purchases p on u.user_id=p.user_id INNER JOIN Items i on p.item_id=i.item_id group by p.item_id LIMIT 10";
             }
