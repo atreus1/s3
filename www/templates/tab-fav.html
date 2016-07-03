@@ -9,10 +9,10 @@
     <div class="list no-padding">
       <div class="card clear-bg" ng-repeat="i in items | filter: query.text:strict" on-tap="onTap(i)" ng-style="isSelected(i) ? {} : passiveStyle" ng-cloak>
         <a class="item dark-bg item-bg-image item-text-wrap" ng-style="i.image ? {'background': 'url({{i.image}}) center no-repeat', 'background-size': '100%'} : {'background-color': '#444444', 'background-size': '100%'}">
-          <h2 ng-bind="i.name"></h2>
+          <h2 ng-bind="::i.name"></h2>
           <span class="badge badge-assertive" ng-show="i.count" ng-bind="i.count"></span>
           <div class="card-footer">
-            <p ng-show="i.amount" style="position: absolute; float:left;">#{{i.amount}} - {{i.price}}kr</p>  
+            <p ng-show="i.amount" style="position: absolute; float:left;">#{{i.amount}} - {{::i.price}}kr</p>  
           </div>
         </a>
       </div>

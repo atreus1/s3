@@ -201,14 +201,14 @@ app.controller('ProfileCtrl', function($scope, DBService) {
 
   $scope.doRefresh = function() {
     var sendData = {'tag':'getLobareWeekData', 'week':getWeek(new Date())};
-    console.log(sendData);
+    //console.log(sendData);
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
         if ($scope.chartLobare.series.length > 0) {
           $scope.chartLobare.series = [];
         }
         $scope.lobare = promise.data.result; 
-        console.log($scope.lobare);
+        //console.log($scope.lobare);
 
         var keyArray = [];
         var objArray = {};
@@ -246,7 +246,7 @@ app.controller('ProfileCtrl', function($scope, DBService) {
     DBService.sendToDB(sendData, false).then(function(promise) {
       if (promise.data.success === 1) {
         $scope.week = promise.data.days; 
-        console.log($scope.week);
+        //console.log($scope.week);
 
         var tempArray = [];
 

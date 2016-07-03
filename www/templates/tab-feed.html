@@ -3,9 +3,9 @@
   <ion-refresher pulling-text="Dra för att uppdatera..." on-refresh="doRefresh()"></ion-refresher> 
     <div ng-controller="FeedCtrl" ng-repeat="f in feed" class="card">
       <a class="item item-avatar item-text-wrap" href="#/tab/feed/{{f.id}}?tmp={{f.firstname}}&tmp={{f.multi}}&tmp={{f.name}}">
-        <span class="avatar" ng-style="f.image ? {'background-image': 'url({{f.image}})'} : {'background-color': '#444444'}"></span>
-        <div ng-if="f.multi == 1"><strong>{{f.firstname}} {{f.lastname}}</strong> buys a {{f.name}}.</div>
-        <div ng-if="f.multi > 1"><strong>{{f.firstname}} {{f.lastname}}</strong> gettin' loooaded with {{f.multi}} {{f.name}}.</div>
+        <span class="avatar" ng-style="f.image ? {'background-image': 'url({{::f.image}})'} : {'background-color': '#444444'}"></span>
+        <div ng-if="f.multi == 1"><strong>{{::f.firstname}} {{::f.lastname}}</strong> buys a {{::f.name}}.</div>
+        <div ng-if="f.multi > 1"><strong>{{::f.firstname}} {{::f.lastname}}</strong> gettin' loooaded with {{f.multi}} {{::f.name}}.</div>
         <div class="card-footer text-right">
           <i class="icon ion-chatbubbles positive"></i> {{f.comments}}
           <div class="pull-left" ng-if="f.datediff >= -1">
